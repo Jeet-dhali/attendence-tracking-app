@@ -1,23 +1,453 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+interface Props {
+  title?: string;
+  activeNav?: string;
+}
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Track your college attendance effortlessly. Configure courses, build timetables, mark attendance, and get smart analytics — all in one beautiful app."
+    />
+    <meta
+      name="keywords"
+      content="attendance tracker, college attendance, student attendance, timetable, attendance calculator"
+    />
+    <meta name="author" content="AttendEase" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} — AttendEase</title>
+  </head>
+  <body class="min-h-screen bg-bg-primary text-text-primary font-sans">
+    <!-- Sidebar (Desktop) -->
+    <aside
+      id="sidebar"
+      class="fixed left-0 top-0 h-full w-[240px] bg-bg-secondary border-r border-border z-40 flex-col hidden lg:flex transition-all duration-300"
+    >
+      <!-- Logo -->
+      <div class="px-5 py-5 flex items-center gap-3 border-b border-border">
+        <div
+          class="w-8 h-8 rounded-lg bg-accent flex items-center justify-center"
+        >
+          <svg
+            class="w-5 h-5 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 11l3 3 8-8"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+            ></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base font-semibold tracking-tight">AttendEase</h1>
+          <p class="text-[11px] text-text-muted font-mono">v1.0</p>
+        </div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 px-3 py-4 space-y-1">
+        <a
+          href="/dashboard"
+          id="nav-dashboard"
+          data-nav="dashboard"
+          class:list={[
+            "nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            activeNav === "dashboard"
+              ? "bg-accent/10 text-accent"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+          ]}
+        >
+          <svg
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          Dashboard
+        </a>
+
+        <a
+          href="/mark"
+          id="nav-mark"
+          data-nav="mark"
+          class:list={[
+            "nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            activeNav === "mark"
+              ? "bg-accent/10 text-accent"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+          ]}
+        >
+          <svg
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+          </svg>
+          Mark Attendance
+        </a>
+
+        <a
+          href="/analytics"
+          id="nav-analytics"
+          data-nav="analytics"
+          class:list={[
+            "nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            activeNav === "analytics"
+              ? "bg-accent/10 text-accent"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+          ]}
+        >
+          <svg
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 3v18h18"></path>
+            <path d="m19 9-5 5-4-4-3 3"></path>
+          </svg>
+          Analytics
+        </a>
+
+        <div class="pt-3 pb-1">
+          <span
+            class="px-3 text-[11px] font-mono uppercase tracking-wider text-text-muted"
+            >Settings</span
+          >
+        </div>
+
+        <a
+          href="/setup"
+          id="nav-setup"
+          data-nav="setup"
+          class:list={[
+            "nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            activeNav === "setup"
+              ? "bg-accent/10 text-accent"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+          ]}
+        >
+          <svg
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            ></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          Configuration
+        </a>
+      </nav>
+
+      <!-- Theme Toggle -->
+      <div class="px-3 py-4 border-t border-border">
+        <button
+          id="theme-toggle-desktop"
+          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all duration-200"
+        >
+          <svg
+            id="theme-icon-desktop-dark"
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+          <svg
+            id="theme-icon-desktop-light"
+            class="w-[18px] h-[18px] hidden"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            ></path>
+          </svg>
+          <span id="theme-label-desktop">Dark Mode</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <header
+      class="lg:hidden fixed top-0 left-0 right-0 h-14 bg-bg-secondary/80 backdrop-blur-xl border-b border-border z-40 flex items-center justify-between px-4"
+    >
+      <div class="flex items-center gap-2">
+        <div
+          class="w-7 h-7 rounded-md bg-accent flex items-center justify-center"
+        >
+          <svg
+            class="w-4 h-4 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 11l3 3 8-8"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+            ></path>
+          </svg>
+        </div>
+        <span class="text-sm font-semibold tracking-tight">AttendEase</span>
+      </div>
+      <button
+        id="theme-toggle-mobile"
+        class="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
+      >
+        <svg
+          id="theme-icon-mobile-dark"
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+        <svg
+          id="theme-icon-mobile-light"
+          class="w-5 h-5 hidden"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path
+            d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+          ></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav
+      id="bottom-nav"
+      class="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-bg-secondary/90 backdrop-blur-xl border-t border-border z-40 flex items-center justify-around px-2"
+    >
+      <a
+        href="/dashboard"
+        data-nav="dashboard"
+        class:list={[
+          "bottom-nav-link flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200",
+          activeNav === "dashboard" ? "text-accent" : "text-text-muted",
+        ]}
+      >
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+        <span class="text-[10px] font-medium">Home</span>
+      </a>
+      <a
+        href="/mark"
+        data-nav="mark"
+        class:list={[
+          "bottom-nav-link flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200",
+          activeNav === "mark" ? "text-accent" : "text-text-muted",
+        ]}
+      >
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+        </svg>
+        <span class="text-[10px] font-medium">Mark</span>
+      </a>
+      <a
+        href="/analytics"
+        data-nav="analytics"
+        class:list={[
+          "bottom-nav-link flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200",
+          activeNav === "analytics" ? "text-accent" : "text-text-muted",
+        ]}
+      >
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 3v18h18"></path>
+          <path d="m19 9-5 5-4-4-3 3"></path>
+        </svg>
+        <span class="text-[10px] font-medium">Analytics</span>
+      </a>
+      <a
+        href="/setup"
+        data-nav="setup"
+        class:list={[
+          "bottom-nav-link flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200",
+          activeNav === "setup" ? "text-accent" : "text-text-muted",
+        ]}
+      >
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+          ></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <span class="text-[10px] font-medium">Config</span>
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="lg:ml-[240px] pt-14 lg:pt-0 pb-20 lg:pb-0 min-h-screen">
+      <slot />
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Theme + Toast Script -->
+    <script is:inline>
+      // ─── Theme ───────────────────────────────
+      (function () {
+        const stored = localStorage.getItem("att_theme") || "dark";
+        document.documentElement.setAttribute("data-theme", stored);
+        updateThemeIcons(stored);
+
+        document.querySelectorAll('[id^="theme-toggle"]').forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const current = document.documentElement.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", next);
+            localStorage.setItem("att_theme", next);
+            updateThemeIcons(next);
+          });
+        });
+
+        function updateThemeIcons(theme) {
+          const isDark = theme === "dark";
+          document
+            .querySelectorAll('[id*="theme-icon"][id*="dark"]')
+            .forEach((el) => {
+              el.style.display = isDark ? "" : "none";
+            });
+          document
+            .querySelectorAll('[id*="theme-icon"][id*="light"]')
+            .forEach((el) => {
+              el.style.display = isDark ? "none" : "";
+            });
+          const label = document.getElementById("theme-label-desktop");
+          if (label) label.textContent = isDark ? "Dark Mode" : "Light Mode";
+        }
+      })();
+
+      // ─── Toast Utility ───────────────────────
+      window.showToast = function (message, type = "info", duration = 3000) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+
+        const icons = {
+          success: "✓",
+          error: "✕",
+          warning: "⚠",
+          info: "ℹ",
+        };
+        const colors = {
+          success: "color: var(--color-success)",
+          error: "color: var(--color-danger)",
+          warning: "color: var(--color-warning)",
+          info: "color: var(--color-accent)",
+        };
+
+        toast.innerHTML = `
+          <span style="${colors[type] || colors.info}; font-weight: 600; font-size: 16px;">${icons[type] || icons.info}</span>
+          <span>${message}</span>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          toast.classList.add("leaving");
+          toast.addEventListener("animationend", () => toast.remove());
+        }, duration);
+      };
+    </script>
+  </body>
+</html>

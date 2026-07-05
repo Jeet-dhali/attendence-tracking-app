@@ -1,11 +1,45 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import "../styles/global.css";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>AttendEase — Smart Attendance Tracker</title>
+  </head>
+  <body>
+    <script is:inline>
+      // Check if onboarding is complete, redirect accordingly
+      const settings = JSON.parse(localStorage.getItem("att_settings") || "{}");
+      if (settings.onboardingComplete) {
+        window.location.replace("/dashboard");
+      } else {
+        window.location.replace("/setup");
+      }
+    </script>
+    <div class="min-h-screen flex items-center justify-center bg-bg-primary">
+      <div class="animate-pulse-soft flex flex-col items-center gap-3">
+        <div
+          class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center"
+        >
+          <svg
+            class="w-7 h-7 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 11l3 3 8-8"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+            ></path>
+          </svg>
+        </div>
+        <p class="text-sm text-text-muted">Loading...</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,492 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Dashboard" activeNav="dashboard">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <!-- Header -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 animate-fade-in"
+    >
+      <div>
+        <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
+          Dashboard
+        </h2>
+        <p class="text-sm text-text-muted mt-0.5" id="date-display"></p>
+      </div>
+      <a
+        href="/mark"
+        class="inline-flex items-center gap-2 h-9 px-4 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 self-start"
+      >
+        <svg
+          class="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+        </svg>
+        Mark Attendance
+      </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div
+      class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6"
+      id="stats-cards"
+    >
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4 sm:gap-6">
+      <!-- Left Column -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Today's Schedule -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-2">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold">Today's Schedule</h3>
+            <span class="text-[11px] font-mono text-text-muted" id="today-day"
+            ></span>
+          </div>
+          <div id="today-schedule" class="space-y-2"></div>
+          <div id="today-empty" class="hidden py-8 text-center">
+            <div class="text-3xl mb-2">🏖️</div>
+            <p class="text-sm text-text-muted">
+              No classes scheduled for today!
+            </p>
+          </div>
+        </div>
+
+        <!-- Attendance Trend -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold">30-Day Trend</h3>
+            <span class="text-[11px] font-mono text-text-muted"
+              >Last 30 days</span
+            >
+          </div>
+          <div class="h-32 sm:h-40" id="trend-chart"></div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Per Subject Stats -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-3">
+          <h3 class="text-sm font-semibold mb-4">Course Breakdown</h3>
+          <div id="course-stats" class="space-y-3"></div>
+        </div>
+
+        <!-- Alerts -->
+        <div
+          id="alerts-section"
+          class="card p-4 sm:p-5 animate-slide-up stagger-5 hidden"
+        >
+          <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-danger animate-pulse-soft"
+            ></span>
+            Alerts
+          </h3>
+          <div id="alerts-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-6">
+          <h3 class="text-sm font-semibold mb-3">Quick Actions</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <a
+              href="/mark"
+              class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+            >
+              <svg
+                class="w-5 h-5 text-accent"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><path d="M9 11l3 3L22 4"></path><path
+                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                ></path></svg
+              >
+              <span class="text-[11px] font-medium text-text-secondary"
+                >Mark Today</span
+              >
+            </a>
+            <a
+              href="/analytics"
+              class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+            >
+              <svg
+                class="w-5 h-5 text-purple"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"
+                ></path></svg
+              >
+              <span class="text-[11px] font-medium text-text-secondary"
+                >Analytics</span
+              >
+            </a>
+            <a
+              href="/analytics#bunk"
+              class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+            >
+              <svg
+                class="w-5 h-5 text-warning"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"
+                ></path></svg
+              >
+              <span class="text-[11px] font-medium text-text-secondary"
+                >Bunk Calc</span
+              >
+            </a>
+            <a
+              href="/setup"
+              class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+            >
+              <svg
+                class="w-5 h-5 text-cyan"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                ><path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                ></path><circle cx="12" cy="12" r="3"></circle></svg
+              >
+              <span class="text-[11px] font-medium text-text-secondary"
+                >Settings</span
+              >
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import {
+      getCourses,
+      getCourseById,
+      getOverallStats,
+      getCurrentStreak,
+      getTodaySchedule,
+      getSlotStatus,
+      getToday,
+      getAttendanceTrend,
+      getBunkableClasses,
+      getClassesNeeded,
+      getDayName,
+      DAYS,
+    } from "../scripts/store.js";
+
+    // ─── Date Display ───────────────────────────
+    const now = new Date();
+    const dayName = getDayName(now);
+    document.getElementById("date-display")!.textContent =
+      now.toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    document.getElementById("today-day")!.textContent =
+      dayName === "sunday"
+        ? "Sunday — Holiday"
+        : dayName.charAt(0).toUpperCase() + dayName.slice(1);
+
+    // ─── Stats Cards ────────────────────────────
+    const stats = getOverallStats();
+    const streak = getCurrentStreak();
+
+    function getStatusColor(pct: any) {
+      if (pct >= 75)
+        return {
+          text: "text-success",
+          bg: "bg-success-soft",
+          border: "border-success/20",
+        };
+      if (pct >= 60)
+        return {
+          text: "text-warning",
+          bg: "bg-warning-soft",
+          border: "border-warning/20",
+        };
+      return {
+        text: "text-danger",
+        bg: "bg-danger-soft",
+        border: "border-danger/20",
+      };
+    }
+
+    const pctColor = getStatusColor(stats.percentage);
+    const cardsHTML = [
+      {
+        label: "Overall Attendance",
+        value: `${stats.percentage}%`,
+        icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>',
+        color: pctColor.text,
+        bgColor: pctColor.bg,
+      },
+      {
+        label: "Classes Attended",
+        value: `${stats.totalAttended}`,
+        sub: `/ ${stats.totalClasses} total`,
+        icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path></svg>',
+        color: "text-accent",
+        bgColor: "bg-accent-soft",
+      },
+      {
+        label: "Classes Missed",
+        value: `${stats.totalAbsent}`,
+        icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>',
+        color: "text-danger",
+        bgColor: "bg-danger-soft",
+      },
+      {
+        label: "Current Streak",
+        value: streak > 0 ? `🔥 ${streak}` : "0",
+        sub: streak > 0 ? "days" : "Start today!",
+        icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>',
+        color: "text-warning",
+        bgColor: "bg-warning-soft",
+      },
+    ];
+
+    document.getElementById("stats-cards")!.innerHTML = cardsHTML
+      .map(
+        (card, i) => `
+      <div class="card p-3 sm:p-4 animate-slide-up stagger-${i + 1}">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-7 h-7 rounded-lg ${card.bgColor} flex items-center justify-center ${card.color}">
+            ${card.icon}
+          </div>
+        </div>
+        <div class="text-xl sm:text-2xl font-semibold tracking-tight ${card.color}">${card.value}</div>
+        <div class="text-[11px] text-text-muted mt-0.5">${card.label}</div>
+        ${card.sub ? `<div class="text-[10px] text-text-muted">${card.sub}</div>` : ""}
+      </div>
+    `,
+      )
+      .join("");
+
+    // ─── Today's Schedule ───────────────────────
+    const schedule = getTodaySchedule();
+    const todayStr = getToday();
+
+    if (schedule.length === 0 || dayName === "sunday") {
+      document.getElementById("today-empty")!.classList.remove("hidden");
+    } else {
+      const statusIcons = {
+        present: {
+          emoji: "✅",
+          label: "Present",
+          cls: "text-success bg-success-soft",
+        },
+        absent: {
+          emoji: "❌",
+          label: "Absent",
+          cls: "text-danger bg-danger-soft",
+        },
+        holiday: {
+          emoji: "🏖️",
+          label: "Holiday",
+          cls: "text-info bg-info-soft",
+        },
+        cancelled: {
+          emoji: "🚫",
+          label: "Cancelled",
+          cls: "text-text-muted bg-bg-tertiary",
+        },
+        late: {
+          emoji: "⏰",
+          label: "Late",
+          cls: "text-warning bg-warning-soft",
+        },
+        on_duty: {
+          emoji: "📋",
+          label: "On Duty",
+          cls: "text-cyan bg-cyan-soft",
+        },
+      };
+
+      document.getElementById("today-schedule")!.innerHTML = schedule
+        .map((slot: any) => {
+          const course = getCourseById(slot.courseId);
+          if (!course) return "";
+          const status = getSlotStatus(todayStr, slot.period, slot.courseId);
+          const statusInfo = status
+            ? statusIcons[status as keyof typeof statusIcons]
+            : null;
+
+          return `
+          <div class="flex items-center gap-3 p-2.5 sm:p-3 rounded-lg bg-bg-tertiary/50 hover:bg-bg-tertiary transition-all">
+            <div class="w-1 h-8 rounded-full flex-shrink-0" style="background: ${course.color}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-text-muted">P${slot.period}</span>
+                <span class="text-sm font-medium truncate">${course.name}</span>
+              </div>
+              <span class="text-[11px] text-text-muted">${slot.startTime} – ${slot.endTime}</span>
+            </div>
+            ${
+              statusInfo
+                ? `<span class="status-badge ${statusInfo.cls}">${statusInfo.emoji} ${statusInfo.label}</span>`
+                : `<span class="status-badge bg-bg-elevated text-text-muted">—</span>`
+            }
+          </div>
+        `;
+        })
+        .join("");
+    }
+
+    // ─── Course Breakdown ───────────────────────
+    const courseStatsEl = document.getElementById("course-stats");
+
+    if (stats.courseStats.length === 0) {
+      courseStatsEl!.innerHTML = `
+        <div class="py-6 text-center">
+          <p class="text-sm text-text-muted">No courses configured.</p>
+          <a href="/setup" class="text-sm text-accent hover:underline">Set up courses →</a>
+        </div>
+      `;
+    } else {
+      courseStatsEl!.innerHTML = stats.courseStats
+        .map((course) => {
+          const color = getStatusColor(course.percentage);
+          const bunkable = getBunkableClasses(course.id);
+
+          return `
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full flex-shrink-0" style="background: ${course.color}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-medium truncate">${course.code}</span>
+                <span class="text-xs font-semibold ${color.text}">${course.percentage}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${Math.min(course.percentage, 100)}%; background: ${course.color}"></div>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-[10px] text-text-muted">${course.attended}/${course.total} classes</span>
+                ${
+                  bunkable > 0
+                    ? `<span class="text-[10px] text-success">Can skip ${bunkable} more</span>`
+                    : course.percentage < course.minAttendance
+                      ? `<span class="text-[10px] text-danger">Need ${getClassesNeeded(course.id)} more</span>`
+                      : `<span class="text-[10px] text-text-muted">On track</span>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+        })
+        .join("");
+    }
+
+    // ─── Alerts ─────────────────────────────────
+    const alerts = stats.courseStats.filter(
+      (c) => c.percentage < c.minAttendance && c.total > 0,
+    );
+    const alertsSection = document.getElementById("alerts-section");
+    const alertsList = document.getElementById("alerts-list");
+
+    if (alerts.length > 0) {
+      alertsSection!.classList.remove("hidden");
+      alertsList!.innerHTML = alerts
+        .map(
+          (c) => `
+        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-danger-soft/50 border border-danger/10">
+          <span class="text-danger text-sm">⚠</span>
+          <div class="flex-1 min-w-0">
+            <span class="text-xs font-medium">${c.code}</span>
+            <span class="text-[11px] text-text-muted"> — ${c.percentage}% (need ${c.minAttendance}%)</span>
+          </div>
+        </div>
+      `,
+        )
+        .join("");
+    }
+
+    // ─── Trend Chart ────────────────────────────
+    const trendData = getAttendanceTrend(30);
+    const chartContainer = document.getElementById("trend-chart");
+
+    const validData = trendData.filter((d) => d.percentage !== null);
+    if (validData.length < 2) {
+      chartContainer!.innerHTML = `
+        <div class="h-full flex items-center justify-center">
+          <p class="text-sm text-text-muted">Start marking attendance to see trends</p>
+        </div>
+      `;
+    } else {
+      // Simple SVG chart
+      const w = 500;
+      const h = 140;
+      const padding = { top: 10, right: 10, bottom: 20, left: 30 };
+      const chartW = w - padding.left - padding.right;
+      const chartH = h - padding.top - padding.bottom;
+
+      const maxPct = 100;
+      const minPct = 0;
+      const points = validData.map((d: any, i: any) => {
+        const x = padding.left + (i / (validData.length - 1)) * chartW;
+        const y =
+          padding.top +
+          chartH -
+          ((d.percentage! - minPct) / (maxPct - minPct)) * chartH;
+        return { x, y, ...d };
+      });
+
+      const pathD = points
+        .map((p: any, i: any) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+        .join(" ");
+      const areaD =
+        pathD +
+        ` L ${points[points.length - 1].x} ${h - padding.bottom} L ${points[0].x} ${h - padding.bottom} Z`;
+
+      chartContainer!.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" class="w-full h-full">
+          <!-- Grid lines -->
+          <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${h - padding.bottom}" stroke="var(--color-border)" stroke-width="0.5"/>
+          <line x1="${padding.left}" y1="${h - padding.bottom}" x2="${w - padding.right}" y2="${h - padding.bottom}" stroke="var(--color-border)" stroke-width="0.5"/>
+          ${[0, 25, 50, 75, 100]
+            .map((pct) => {
+              const y = padding.top + chartH - (pct / 100) * chartH;
+              return `
+              <line x1="${padding.left}" y1="${y}" x2="${w - padding.right}" y2="${y}" stroke="var(--color-border)" stroke-width="0.3" stroke-dasharray="4,4"/>
+              <text x="${padding.left - 4}" y="${y + 3}" fill="var(--color-text-muted)" font-size="8" text-anchor="end" font-family="var(--font-mono)">${pct}</text>
+            `;
+            })
+            .join("")}
+          <!-- 75% threshold line -->
+          <line x1="${padding.left}" y1="${padding.top + chartH - (75 / 100) * chartH}" x2="${w - padding.right}" y2="${padding.top + chartH - (75 / 100) * chartH}" stroke="var(--color-warning)" stroke-width="0.5" stroke-dasharray="6,3" opacity="0.6"/>
+          <!-- Area fill -->
+          <path d="${areaD}" fill="url(#trendGrad)" opacity="0.3"/>
+          <!-- Line -->
+          <path d="${pathD}" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Points -->
+          ${points.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="var(--color-accent)" stroke="var(--color-bg-secondary)" stroke-width="1.5"/>`).join("")}
+          <defs>
+            <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
+    }
+  </script>
+</Layout>

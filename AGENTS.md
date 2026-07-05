@@ -1,3 +1,7 @@
+Always use:
+- astro, tailwind-4-docs, web-design-guidlines,ui-ux-pro-max these 4 skills for this project
+- DESIGN.md for this project design
+
 ## Development
 
 When starting the dev server, use background mode:

@@ -143,6 +143,32 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           Analytics
         </a>
 
+        <a
+          href="/bunk"
+          id="nav-bunk"
+          data-nav="bunk"
+          class:list={[
+            "nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            activeNav === "bunk"
+              ? "bg-accent/10 text-accent"
+              : "text-text-secondary hover:text-text-primary hover:bg-bg-tertiary",
+          ]}
+        >
+          <svg
+            class="w-[18px] h-[18px]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path>
+          </svg>
+          Bunk Calculator
+        </a>
+
         <div class="pt-3 pb-1">
           <span
             class="px-3 text-[11px] font-mono uppercase tracking-wider text-text-muted"
@@ -347,6 +373,28 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           <path d="m19 9-5 5-4-4-3 3"></path>
         </svg>
         <span class="text-[10px] font-medium">Analytics</span>
+      </a>
+      <a
+        href="/bunk"
+        data-nav="bunk"
+        class:list={[
+          "bottom-nav-link flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all duration-200",
+          activeNav === "bunk" ? "text-accent" : "text-text-muted",
+        ]}
+      >
+        <svg
+          class="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path>
+        </svg>
+        <span class="text-[10px] font-medium">Bunk</span>
       </a>
       <a
         href="/setup"

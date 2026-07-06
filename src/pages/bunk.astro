@@ -1,0 +1,563 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Bunk Calculator" activeNav="bunk">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 animate-fade-in">
+    <!-- Header -->
+    <div class="mb-6">
+      <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
+        🎓 Bunk Calculator
+      </h2>
+      <p class="text-sm text-text-muted mt-0.5">
+        Smart planning for your academic freedom
+      </p>
+    </div>
+
+    <!-- Main Bunk Calculator -->
+    <div class="card p-4 sm:p-6 mb-6 animate-slide-up stagger-1">
+      <h3 class="text-sm font-semibold mb-4">Your Bunk Balance</h3>
+      <div id="bunk-balance" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- What-If Calculator -->
+    <div class="card p-4 sm:p-6 mb-6 animate-slide-up stagger-2">
+      <h3 class="text-sm font-semibold mb-4">What-If Calculator</h3>
+      <p class="text-xs text-text-muted mb-4">
+        Plan your bunks before you take them
+      </p>
+      <div id="what-if-calculator" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Recovery Calculator -->
+    <div class="card p-4 sm:p-6 mb-6 animate-slide-up stagger-3">
+      <h3 class="text-sm font-semibold mb-4">Recovery Calculator</h3>
+      <p class="text-xs text-text-muted mb-4">
+        Calculate how many classes you need to attend to get back on track
+      </p>
+      <div id="recovery-calculator" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Bunk Planner -->
+    <div class="card p-4 sm:p-6 mb-6 animate-slide-up stagger-4">
+      <h3 class="text-sm font-semibold mb-4">Bunk Planner</h3>
+      <p class="text-xs text-text-muted mb-4">
+        Plan your upcoming bunks strategically
+      </p>
+      <div id="bunk-planner" class="space-y-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Smart Recommendations -->
+    <div class="card p-4 sm:p-6 mb-6 animate-slide-up stagger-5">
+      <h3 class="text-sm font-semibold mb-4">Smart Recommendations</h3>
+      <div id="recommendations" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Bunk History -->
+    <div class="card p-4 sm:p-6 animate-slide-up stagger-6">
+      <h3 class="text-sm font-semibold mb-4">Bunk History</h3>
+      <div id="bunk-history" class="space-y-2">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import {
+      getCourses,
+      getCourseById,
+      getCourseStats,
+      getBunkableClasses,
+      getClassesNeeded,
+      getRecords,
+      getDaySchedule,
+      getDayName,
+      formatDate,
+      getToday,
+      STATUS_TYPES,
+    } from "../scripts/store.js";
+
+    declare global {
+      interface Window {
+        showToast: (message: string, type?: string) => void;
+      }
+    }
+
+    // Initialize
+    function init() {
+      renderBunkBalance();
+      renderWhatIfCalculator();
+      renderRecoveryCalculator();
+      renderBunkPlanner();
+      renderRecommendations();
+      renderBunkHistory();
+    }
+
+    // Helper functions
+    function getStatusColor(pct, target) {
+      if (pct >= target) return "text-success";
+      if (pct >= target - 10) return "text-warning";
+      return "text-danger";
+    }
+
+    function getStatusBg(pct, target) {
+      if (pct >= target) return "bg-success-soft";
+      if (pct >= target - 10) return "bg-warning-soft";
+      return "bg-danger-soft";
+    }
+
+    // Bunk Balance
+    function renderBunkBalance() {
+      const courses = getCourses();
+      
+      if (courses.length === 0) {
+        document.getElementById("bunk-balance")!.innerHTML = `
+          <div class="py-8 text-center">
+            <p class="text-sm text-text-muted">No courses configured</p>
+            <a href="/setup" class="text-sm text-accent hover:underline">Set up courses →</a>
+          </div>
+        `;
+        return;
+      }
+
+      let html = courses.map(course => {
+        const stats = getCourseStats(course.id);
+        const bunkable = getBunkableClasses(course.id);
+        const needed = getClassesNeeded(course.id);
+        const pctColor = getStatusColor(stats.percentage, course.minAttendance);
+        const pctBg = getStatusBg(stats.percentage, course.minAttendance);
+        
+        const progress = Math.min(stats.percentage, 100);
+        const targetProgress = course.minAttendance;
+        
+        return `
+          <div class="p-4 rounded-lg bg-bg-tertiary/50 border border-border">
+            <div class="flex items-start justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full" style="background: ${course.color}"></div>
+                <div>
+                  <div class="text-sm font-semibold">${course.code}</div>
+                  <div class="text-xs text-text-muted">${course.name}</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-bold ${pctColor}">${stats.percentage}%</div>
+                <div class="text-[10px] text-text-muted">Target: ${course.minAttendance}%</div>
+              </div>
+            </div>
+            
+            <!-- Progress bar with target marker -->
+            <div class="relative h-3 bg-bg-elevated rounded-full overflow-hidden mb-3">
+              <div class="absolute h-full bg-success/30 rounded-full" style="width: ${targetProgress}%"></div>
+              <div class="h-full rounded-full transition-all duration-500" style="width: ${progress}%; background: ${course.color}"></div>
+              <div class="absolute top-0 bottom-0 w-0.5 bg-accent z-10" style="left: ${targetProgress}%"></div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div class="p-2 rounded ${pctBg}">
+                <div class="text-xl font-bold ${pctColor}">${bunkable}</div>
+                <div class="text-[10px] text-text-muted">Safe Bunks</div>
+              </div>
+              <div class="p-2 rounded bg-bg-elevated">
+                <div class="text-xl font-bold text-text-primary">${stats.total}</div>
+                <div class="text-[10px] text-text-muted">Total Classes</div>
+              </div>
+              <div class="p-2 rounded bg-bg-elevated">
+                <div class="text-xl font-bold text-text-primary">${stats.absent}</div>
+                <div class="text-[10px] text-text-muted">Total Bunks</div>
+              </div>
+            </div>
+            
+            ${stats.percentage < course.minAttendance ? `
+              <div class="mt-3 p-2 rounded bg-danger-soft border border-danger/20">
+                <div class="flex items-center gap-2 text-danger text-xs">
+                  <span>⚠️</span>
+                  <span>You need <strong>${needed}</strong> more classes to reach ${course.minAttendance}%</span>
+                </div>
+              </div>
+            ` : bunkable > 0 ? `
+              <div class="mt-3 p-2 rounded bg-success-soft border border-success/20">
+                <div class="flex items-center gap-2 text-success text-xs">
+                  <span>✅</span>
+                  <span>You can safely skip <strong>${bunkable}</strong> more classes</span>
+                </div>
+              </div>
+            ` : `
+              <div class="mt-3 p-2 rounded bg-warning-soft border border-warning/20">
+                <div class="flex items-center gap-2 text-warning text-xs">
+                  <span>⚡</span>
+                  <span>You're exactly on target - be careful!</span>
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById("bunk-balance")!.innerHTML = html;
+    }
+
+    // What-If Calculator
+    function renderWhatIfCalculator() {
+      const courses = getCourses();
+      
+      if (courses.length === 0) {
+        document.getElementById("what-if-calculator")!.innerHTML = `
+          <div class="py-4 text-center">
+            <p class="text-sm text-text-muted">No courses configured</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = courses.map(course => {
+        const stats = getCourseStats(course.id);
+        
+        return `
+          <div class="p-4 rounded-lg bg-bg-tertiary/50 border border-border">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-2 h-2 rounded-full" style="background: ${course.color}"></div>
+              <span class="text-sm font-medium">${course.code}</span>
+              <span class="text-xs text-text-muted">${course.name}</span>
+            </div>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs text-text-muted mb-1 block">What if I skip...</label>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min="0"
+                    max="10"
+                    value="0"
+                    data-course="${course.id}"
+                    class="what-if-slider flex-1 h-2 bg-bg-elevated rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span class="what-if-value text-sm font-semibold w-8 text-right">0</span>
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="p-2 rounded bg-bg-elevated text-center">
+                  <div class="text-text-muted">New Attendance</div>
+                  <div class="what-if-result font-semibold text-text-primary">${stats.percentage}%</div>
+                </div>
+                <div class="p-2 rounded bg-bg-elevated text-center">
+                  <div class="text-text-muted">Status</div>
+                  <div class="what-if-status font-semibold ${stats.percentage >= course.minAttendance ? 'text-success' : 'text-danger'}">${stats.percentage >= course.minAttendance ? 'Safe' : 'Danger'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById("what-if-calculator")!.innerHTML = html;
+      
+      // Add event listeners for sliders
+      document.querySelectorAll('.what-if-slider').forEach(slider => {
+        slider.addEventListener('input', (e) => {
+          const courseId = (e.target as HTMLElement).dataset.course;
+          const skipCount = parseInt((e.target as HTMLInputElement).value);
+          const course = getCourseById(courseId);
+          const stats = getCourseStats(courseId);
+          
+          // Calculate new attendance
+          const newTotal = stats.total + skipCount;
+          const newPct = Math.round((stats.attended / newTotal) * 100);
+          
+          // Update display
+          const container = (e.target as HTMLElement).closest('.p-4');
+          container.querySelector('.what-if-value')!.textContent = skipCount;
+          container.querySelector('.what-if-result')!.textContent = `${newPct}%`;
+          
+          const statusEl = container.querySelector('.what-if-status')!;
+          statusEl.textContent = newPct >= course.minAttendance ? 'Safe' : 'Danger';
+          statusEl.className = `what-if-status font-semibold ${newPct >= course.minAttendance ? 'text-success' : 'text-danger'}`;
+        });
+      });
+    }
+
+    // Recovery Calculator
+    function renderRecoveryCalculator() {
+      const courses = getCourses();
+      const atRiskCourses = courses.filter(course => {
+        const stats = getCourseStats(course.id);
+        return stats.percentage < course.minAttendance && stats.total > 0;
+      });
+      
+      if (atRiskCourses.length === 0) {
+        document.getElementById("recovery-calculator")!.innerHTML = `
+          <div class="py-4 text-center">
+            <div class="text-2xl mb-2">🎉</div>
+            <p class="text-sm text-text-muted">All courses are on track! No recovery needed.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = atRiskCourses.map(course => {
+        const stats = getCourseStats(course.id);
+        const needed = getClassesNeeded(course.id);
+        const gap = course.minAttendance - stats.percentage;
+        
+        return `
+          <div class="p-4 rounded-lg bg-danger-soft/30 border border-danger/20">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-2 h-2 rounded-full" style="background: ${course.color}"></div>
+              <span class="text-sm font-medium">${course.code}</span>
+              <span class="text-xs text-text-muted">${course.name}</span>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="text-text-muted">Current</span>
+                <span class="font-semibold text-danger">${stats.percentage}%</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-text-muted">Target</span>
+                <span class="font-semibold">${course.minAttendance}%</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-text-muted">Gap</span>
+                <span class="font-semibold text-danger">${gap}%</span>
+              </div>
+              
+              <div class="mt-3 p-3 rounded bg-bg-elevated border border-border">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-accent">${needed}</div>
+                  <div class="text-xs text-text-muted">Classes needed to reach ${course.minAttendance}%</div>
+                </div>
+              </div>
+              
+              <div class="text-xs text-text-muted">
+                💡 Tip: Attend the next ${needed} classes without skipping any to get back on track.
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById("recovery-calculator")!.innerHTML = html;
+    }
+
+    // Bunk Planner
+    function renderBunkPlanner() {
+      const courses = getCourses();
+      const today = new Date();
+      const dayName = getDayName(today);
+      const schedule = getDaySchedule(dayName);
+      
+      if (courses.length === 0) {
+        document.getElementById("bunk-planner")!.innerHTML = `
+          <div class="py-4 text-center">
+            <p class="text-sm text-text-muted">No courses configured</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Get next 7 days schedule
+      let html = `<div class="space-y-3">`;
+      
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        const dateStr = formatDate(date);
+        const displayDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        const isToday = i === 0;
+        
+        const daySchedule = getDaySchedule(getDayName(date));
+        
+        if (daySchedule.length === 0) {
+          html += `
+            <div class="p-3 rounded-lg bg-bg-tertiary/30 border border-border opacity-50">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-text-muted">${displayDate}</span>
+                <span class="text-xs text-text-muted">No classes</span>
+              </div>
+            </div>
+          `;
+          continue;
+        }
+        
+        html += `
+          <div class="p-3 rounded-lg bg-bg-tertiary/50 border border-border">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-medium ${isToday ? 'text-accent' : 'text-text-secondary'}">${displayDate} ${isToday ? '(Today)' : ''}</span>
+              <span class="text-xs text-text-muted">${daySchedule.length} classes</span>
+            </div>
+            <div class="space-y-2">
+        `;
+        
+        daySchedule.forEach(slot => {
+          const course = getCourseById(slot.courseId);
+          const stats = getCourseStats(course.id);
+          const bunkable = getBunkableClasses(course.id);
+          const canSkip = bunkable > 0;
+          
+          html += `
+            <div class="flex items-center justify-between p-2 rounded ${canSkip ? 'bg-success-soft/30' : 'bg-danger-soft/30'}">
+              <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full" style="background: ${course.color}"></div>
+                <span class="text-xs">${course.code}</span>
+                <span class="text-[10px] text-text-muted">${slot.startTime}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                ${canSkip 
+                  ? `<span class="text-[10px] text-success">✓ Safe to skip</span>`
+                  : `<span class="text-[10px] text-danger">✗ Don't skip</span>`
+                }
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+      
+      html += `</div>`;
+      document.getElementById("bunk-planner")!.innerHTML = html;
+    }
+
+    // Smart Recommendations
+    function renderRecommendations() {
+      const courses = getCourses();
+      const recommendations = [];
+      
+      courses.forEach(course => {
+        const stats = getCourseStats(course.id);
+        const bunkable = getBunkableClasses(course.id);
+        
+        if (stats.percentage < course.minAttendance) {
+          recommendations.push({
+            type: 'urgent',
+            icon: '🚨',
+            message: `${course.code}: Attend next ${getClassesNeeded(course.id)} classes urgently`
+          });
+        } else if (bunkable > 5) {
+          recommendations.push({
+            type: 'info',
+            icon: '💡',
+            message: `${course.code}: You have plenty of buffer - ${bunkable} safe bunks available`
+          });
+        } else if (bunkable <= 2 && bunkable > 0) {
+          recommendations.push({
+            type: 'warning',
+            icon: '⚠️',
+            message: `${course.code}: Running low on safe bunks - only ${bunkable} left`
+          });
+        } else if (bunkable === 0) {
+          recommendations.push({
+            type: 'danger',
+            icon: '🚫',
+            message: `${course.code}: No more safe bunks - attend every class`
+          });
+        }
+      });
+      
+      if (recommendations.length === 0) {
+        document.getElementById("recommendations")!.innerHTML = `
+          <div class="py-4 text-center">
+            <div class="text-2xl mb-2">✨</div>
+            <p class="text-sm text-text-muted">You're doing great! No specific recommendations.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = recommendations.map(rec => {
+        const bgColor = rec.type === 'urgent' ? 'bg-danger-soft' : rec.type === 'warning' ? 'bg-warning-soft' : rec.type === 'danger' ? 'bg-bg-elevated' : 'bg-info-soft';
+        
+        return `
+          <div class="flex items-start gap-3 p-3 rounded-lg ${bgColor}">
+            <span class="text-lg">${rec.icon}</span>
+            <p class="text-xs text-text-secondary">${rec.message}</p>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById("recommendations")!.innerHTML = html;
+    }
+
+    // Bunk History
+    function renderBunkHistory() {
+      const records = getRecords();
+      const courses = getCourses();
+      const bunkHistory = [];
+      
+      Object.entries(records).forEach(([dateStr, dayRecords]) => {
+        Object.values(dayRecords).forEach((entry: any) => {
+          if (entry.status === 'absent') {
+            const course = getCourseById(entry.courseId);
+            if (course) {
+              bunkHistory.push({
+                date: dateStr,
+                course: course,
+                timestamp: entry.timestamp
+              });
+            }
+          }
+        });
+      });
+      
+      // Sort by date descending
+      bunkHistory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      if (bunkHistory.length === 0) {
+        document.getElementById("bunk-history")!.innerHTML = `
+          <div class="py-4 text-center">
+            <div class="text-2xl mb-2">📋</div>
+            <p class="text-sm text-text-muted">No bunk history yet</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by course
+      const courseBunks = {};
+      bunkHistory.forEach(bunk => {
+        if (!courseBunks[bunk.course.id]) {
+          courseBunks[bunk.course.id] = { course: bunk.course, count: 0, lastBunk: null };
+        }
+        courseBunks[bunk.course.id].count++;
+        if (!courseBunks[bunk.course.id].lastBunk || new Date(bunk.date) > new Date(courseBunks[bunk.course.id].lastBunk)) {
+          courseBunks[bunk.course.id].lastBunk = bunk.date;
+        }
+      });
+      
+      let html = Object.values(courseBunks).map(({ course, count, lastBunk }) => {
+        const lastBunkDate = lastBunk ? new Date(lastBunk).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Never';
+        
+        return `
+          <div class="flex items-center justify-between p-2 rounded-lg bg-bg-tertiary/50">
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full" style="background: ${course.color}"></div>
+              <span class="text-xs font-medium">${course.code}</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-text-muted">
+              <span>${count} bunks</span>
+              <span>Last: ${lastBunkDate}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById("bunk-history")!.innerHTML = html;
+    }
+
+    // Start
+    init();
+  </script>
+</Layout>

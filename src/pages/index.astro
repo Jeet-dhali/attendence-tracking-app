@@ -2,44 +2,380 @@
 import "../styles/global.css";
 ---
 
+<!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>AttendEase — Smart Attendance Tracker</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>AttendEase — Free Attendance Tracker App for Students</title>
+    <meta name="description" content="AttendEase is a free online attendance tracker app for students. Track your attendance, calculate bunks, and stay on top of your academic goals with our smart student attendance tracker." />
+    <meta name="keywords" content="attendance tracker, attendance tracker app, my attendance tracker, student attendance tracker, online attendance tracker, free attendance tracker, attendance tracker for students" />
+    <meta name="author" content="AttendEase" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://atteendease.com/" />
+    <meta property="og:title" content="AttendEase — Free Attendance Tracker App for Students" />
+    <meta property="og:description" content="Track your attendance, calculate bunks, and stay on top of your academic goals with our smart student attendance tracker. Free and easy to use." />
+    <meta property="og:image" content="https://atteendease.com/og-image.png" />
+    <meta property="og:site_name" content="AttendEase" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://atteendease.com/" />
+    <meta name="twitter:title" content="AttendEase — Free Attendance Tracker App for Students" />
+    <meta name="twitter:description" content="Track your attendance, calculate bunks, and stay on top of your academic goals with our smart student attendance tracker." />
+    <meta name="twitter:image" content="https://atteendease.com/og-image.png" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://atteendease.com/" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    
+    <!-- FAQ Schema (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What are the best attendance tracker tools?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The best attendance tracker tools for students include AttendEase, which offers features like bunk calculations, attendance analytics, and local data storage. Other options include spreadsheet-based trackers in Excel or Google Sheets, and mobile apps designed specifically for student attendance tracking. AttendEase stands out as a free attendance tracker that provides smart analytics without requiring account registration."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is an attendance tracker?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An attendance tracker is a tool or system used to record and monitor attendance. For students, an attendance tracker helps monitor class attendance, calculate attendance percentages, and ensure compliance with minimum attendance requirements. AttendEase is a student attendance tracker that simplifies this process with features like automatic percentage calculations, bunk planning, and attendance trend analysis."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to create an attendance tracker in Excel?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To create an attendance tracker in Excel, create columns for dates, course names, and attendance status (Present/Absent). Use formulas like COUNTIF to calculate totals and percentages. However, Excel requires manual entry and lacks smart features. AttendEase offers a more convenient online attendance tracker with automatic calculations, bunk planning, and attendance analytics - all without manual spreadsheet management."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to add attendance tracker in Google Meet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Google Meet doesn't have a built-in attendance tracker for students. While teachers can enable attendance reports, students need a separate tool to track their own attendance. AttendEase serves as a dedicated student attendance tracker that works independently of video conferencing platforms, allowing you to maintain your own records regardless of the meeting platform used."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to make attendance tracker in Google Sheets?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Creating an attendance tracker in Google Sheets involves setting up a spreadsheet with date columns, course rows, and attendance status cells. You can use Google Sheets formulas to calculate attendance percentages. However, this requires ongoing manual maintenance. AttendEase provides a more efficient alternative as a specialized online attendance tracker with built-in calculations, visual analytics, and attendance trend tracking."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is AttendEase a free attendance tracker?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AttendEase is completely free for students. Our free attendance tracker offers all features including attendance marking, bunk calculations, analytics, and calendar views without any subscription fees or hidden costs. Unlike other attendance tracker apps that may charge for premium features, AttendEase provides comprehensive attendance tracking functionality entirely free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the bunk calculator work in AttendEase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AttendEase's bunk calculator analyzes your current attendance across all courses and calculates how many classes you can safely skip while maintaining your target attendance percentage. The what-if scenario feature lets you plan ahead by seeing how skipping future classes would affect your attendance. This smart feature makes AttendEase the preferred my attendance tracker for students who want to balance academic freedom with attendance requirements."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my attendance data private in AttendEase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AttendEase is a 100% private attendance tracker. All your attendance data is stored locally in your browser's localStorage - no data is sent to external servers or stored in the cloud. This ensures complete privacy and security for your academic records. Your attendance information is accessible only to you, making AttendEase a trustworthy choice for privacy-conscious students."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
-  <body>
+  <body class="min-h-screen bg-bg-primary text-text-primary font-sans">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-bg-secondary/80 backdrop-blur-xl border-b border-border">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-md bg-accent flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3 8-8"></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+          </div>
+          <span class="text-lg font-semibold tracking-tight">AttendEase</span>
+        </a>
+        <div class="flex items-center gap-4">
+          <a href="#features" class="text-sm text-text-secondary hover:text-text-primary transition-colors">Features</a>
+          <a href="/about" class="text-sm text-text-secondary hover:text-text-primary transition-colors">About</a>
+          <a href="/contact" class="text-sm text-text-secondary hover:text-text-primary transition-colors">Contact</a>
+          <a href="/faq" class="text-sm text-text-secondary hover:text-text-primary transition-colors">FAQ</a>
+          <button id="get-started-btn" class="h-9 px-5 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all">Get Started</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-soft border border-accent/20 mb-6">
+          <span class="text-xs font-medium text-accent">🎓 Free for Students</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+          Your Smart<br />
+          <span class="text-accent">Attendance Tracker</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
+          Track your attendance, calculate safe bunks, and stay on top of your academic goals with our free online attendance tracker app.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button id="hero-start-btn" class="h-12 px-8 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all w-full sm:w-auto flex items-center justify-center">
+            Start Tracking Now
+          </button>
+          <a href="#features" class="h-12 px-8 bg-bg-tertiary hover:bg-bg-elevated text-text-primary text-sm font-medium rounded-lg transition-all w-full sm:w-auto flex items-center justify-center">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO Content Section -->
+    <section class="py-16 px-4 sm:px-6 border-t border-border">
+      <div class="max-w-4xl mx-auto">
+        <div class="prose prose-invert prose-lg max-w-none">
+          <h2 class="text-2xl font-semibold mb-6">Why Choose AttendEase as Your Student Attendance Tracker?</h2>
+          
+          <p class="text-text-secondary mb-4">
+            AttendEase is the ultimate free attendance tracker app designed specifically for students who want to take control of their academic attendance. Unlike traditional attendance tracking systems that are complicated and teacher-focused, our student attendance tracker puts you in the driver's seat. Whether you're a college student worried about maintaining your attendance percentage or a university student who needs to track attendance across multiple courses, AttendEase makes it effortless to monitor, analyze, and improve your attendance record.
+          </p>
+          
+          <p class="text-text-secondary mb-4">
+            As a leading online attendance tracker, AttendEase offers a comprehensive suite of features that go beyond simple record-keeping. Our attendance tracker for students includes intelligent bunk calculations that tell you exactly how many classes you can safely skip without falling below your required attendance percentage. The smart analytics dashboard provides detailed insights into your attendance patterns, helping you identify trends and make informed decisions about your class attendance. With our my attendance tracker approach, all your data is stored locally on your device, ensuring complete privacy and security while giving you instant access to your attendance records anytime, anywhere.
+          </p>
+          
+          <p class="text-text-secondary mb-4">
+            What sets AttendEase apart from other attendance tracking solutions is its student-centric design and user-friendly interface. Our free attendance tracker eliminates the complexity of traditional attendance management systems by focusing on what matters most to students: tracking attendance, calculating safe bunks, and staying informed about your academic progress. The intuitive interface allows you to mark attendance for each class with just a few taps, while the powerful analytics engine processes your data to provide actionable insights. Whether you need to track attendance for daily classes, weekly tutorials, or occasional extra sessions, our student attendance tracker adapts to your unique schedule and requirements.
+          </p>
+          
+          <p class="text-text-secondary mb-4">
+            The bunk calculator feature is particularly popular among students who use AttendEase as their my attendance tracker. This intelligent tool analyzes your current attendance across all courses and calculates exactly how many classes you can afford to miss while still maintaining your target attendance percentage. It even provides what-if scenarios, allowing you to plan your attendance strategy in advance. Combined with the weekly attendance planner, which shows you which days have classes that are safe to skip, our online attendance tracker helps you make smart decisions about your class attendance without the stress of manual calculations.
+          </p>
+          
+          <p class="text-text-secondary mb-4">
+            AttendEase also excels as a comprehensive student attendance tracker with its advanced analytics capabilities. The attendance heat map visualizes your attendance patterns over time, making it easy to spot attendance trends and identify periods where you might need to be more consistent. The course comparison feature allows you to see how your attendance varies across different subjects, helping you prioritize which classes need more attention. With detailed statistics, attendance predictions, and trend analysis, our free attendance tracker provides the insights you need to stay on track academically.
+          </p>
+          
+          <p class="text-text-secondary">
+            Built with privacy and convenience in mind, AttendEase operates entirely in your browser without requiring any account registration or data storage on external servers. Your attendance data stays completely private and secure on your device, accessible only to you. This makes AttendEase the perfect choice for students who value their privacy while still wanting a powerful attendance tracker app. Whether you're looking for a simple my attendance tracker or a comprehensive student attendance tracker with advanced features, AttendEase delivers the perfect balance of simplicity and functionality, helping you maintain excellent attendance throughout your academic journey.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 sm:px-6 border-t border-border">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">Powerful Features</h2>
+          <p class="text-text-secondary">Everything you need to track and manage your attendance</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-accent-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3 8-8"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Easy Attendance Marking</h3>
+            <p class="text-sm text-text-secondary">Mark attendance for each class with just a few clicks. Navigate between dates effortlessly.</p>
+          </div>
+          
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-success-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Smart Analytics</h3>
+            <p class="text-sm text-text-secondary">Deep insights with heat maps, trends, and predictions to understand your attendance patterns.</p>
+          </div>
+          
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-warning-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h6z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Bunk Calculator</h3>
+            <p class="text-sm text-text-secondary">Calculate safe bunks with what-if scenarios. Plan your attendance strategically.</p>
+          </div>
+          
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-info-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Calendar View</h3>
+            <p class="text-sm text-text-secondary">Visual attendance calendar with color-coded days for quick overview.</p>
+          </div>
+          
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-purple-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">100% Private</h3>
+            <p class="text-sm text-text-secondary">All data stored locally in your browser. No account required, complete privacy.</p>
+          </div>
+          
+          <div class="card p-6">
+            <div class="w-12 h-12 rounded-xl bg-cyan-soft flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Mobile Friendly</h3>
+            <p class="text-sm text-text-secondary">Works perfectly on desktop and mobile. Track attendance anywhere, anytime.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 sm:px-6 border-t border-border">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-4">Ready to Take Control of Your Attendance?</h2>
+        <p class="text-text-secondary mb-8">Join thousands of students using AttendEase to track their attendance and stay on top of their academic goals.</p>
+        <button id="cta-start-btn" class="inline-block h-12 px-8 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all">
+          Start Using AttendEase Free
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 sm:px-6 border-t border-border">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h4 class="text-sm font-semibold mb-4">Product</h4>
+            <ul class="space-y-2">
+              <li><a href="/dashboard" class="text-xs text-text-muted hover:text-text-primary transition-colors">Dashboard</a></li>
+              <li><a href="/mark" class="text-xs text-text-muted hover:text-text-primary transition-colors">Mark Attendance</a></li>
+              <li><a href="/analytics" class="text-xs text-text-muted hover:text-text-primary transition-colors">Analytics</a></li>
+              <li><a href="/bunk" class="text-xs text-text-muted hover:text-text-primary transition-colors">Bunk Calculator</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold mb-4">Company</h4>
+            <ul class="space-y-2">
+              <li><a href="/about" class="text-xs text-text-muted hover:text-text-primary transition-colors">About Us</a></li>
+              <li><a href="/contact" class="text-xs text-text-muted hover:text-text-primary transition-colors">Contact</a></li>
+            <li><a href="/faq" class="text-xs text-text-muted hover:text-text-primary transition-colors">FAQ</a></li>
+            <li><a href="/blog" class="text-xs text-text-muted hover:text-text-primary transition-colors">Blog</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold mb-4">Legal</h4>
+            <ul class="space-y-2">
+              <li><a href="/privacy" class="text-xs text-text-muted hover:text-text-primary transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="text-xs text-text-muted hover:text-text-primary transition-colors">Terms & Conditions</a></li>
+              <li><a href="/cookie-policy" class="text-xs text-text-muted hover:text-text-primary transition-colors">Cookie Policy</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold mb-4">Connect</h4>
+            <ul class="space-y-2">
+              <li><a href="https://twitter.com/atteendease" class="text-xs text-text-muted hover:text-text-primary transition-colors">Twitter</a></li>
+              <li><a href="https://github.com/atteendease" class="text-xs text-text-muted hover:text-text-primary transition-colors">GitHub</a></li>
+              <li><a href="https://discord.gg/atteendease" class="text-xs text-text-muted hover:text-text-primary transition-colors">Discord</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
+          <a href="/" class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3 8-8"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+              </svg>
+            </div>
+            <span class="text-sm font-medium">AttendEase</span>
+          </a>
+          <p class="text-xs text-text-muted">© 2026 AttendEase. Free attendance tracker for students.</p>
+        </div>
+      </div>
+    </footer>
+
     <script is:inline>
       // Check if onboarding is complete, redirect accordingly
       const settings = JSON.parse(localStorage.getItem("att_settings") || "{}");
-      if (settings.onboardingComplete) {
-        window.location.replace("/dashboard");
-      } else {
-        window.location.replace("/setup");
+      
+      function handleGetStarted() {
+        if (settings.onboardingComplete) {
+          window.location.replace("/dashboard");
+        } else {
+          window.location.replace("/setup");
+        }
       }
+      
+      document.getElementById("get-started-btn")?.addEventListener("click", handleGetStarted);
+      document.getElementById("hero-start-btn")?.addEventListener("click", handleGetStarted);
+      document.getElementById("cta-start-btn")?.addEventListener("click", handleGetStarted);
     </script>
-    <div class="min-h-screen flex items-center justify-center bg-bg-primary">
-      <div class="animate-pulse-soft flex flex-col items-center gap-3">
-        <div
-          class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center"
-        >
-          <svg
-            class="w-7 h-7 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M9 11l3 3 8-8"></path>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-            ></path>
-          </svg>
-        </div>
-        <p class="text-sm text-text-muted">Loading...</p>
-      </div>
-    </div>
+
+    <style>
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+      .card {
+        background: var(--color-bg-tertiary);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+      }
+      .prose h2 {
+        color: var(--color-text-primary);
+        font-weight: 600;
+      }
+      .prose p {
+        color: var(--color-text-secondary);
+        line-height: 1.7;
+      }
+    </style>
   </body>
 </html>

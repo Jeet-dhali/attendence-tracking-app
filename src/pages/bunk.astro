@@ -4,6 +4,13 @@ import "../styles/global.css";
 ---
 
 <Layout title="Bunk Calculator" activeNav="bunk">
+  <script is:inline>
+    // Check if onboarding is complete
+    const settings = JSON.parse(localStorage.getItem("att_settings") || "{}");
+    if (!settings.onboardingComplete) {
+      window.location.replace("/setup");
+    }
+  </script>
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 animate-fade-in">
     <!-- Header -->
     <div class="mb-6">

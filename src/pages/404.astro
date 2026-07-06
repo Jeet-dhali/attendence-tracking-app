@@ -1,0 +1,59 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-bg-primary text-text-primary font-sans">
+    <div class="min-h-screen flex items-center justify-center px-4">
+      <div class="max-w-md w-full text-center animate-fade-in">
+        <!-- Error Illustration -->
+        <div class="mb-8">
+          <div class="w-24 h-24 mx-auto mb-4 rounded-2xl bg-bg-tertiary flex items-center justify-center">
+            <svg class="w-12 h-12 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 8v4"></path>
+              <path d="M12 16h.01"></path>
+            </svg>
+          </div>
+          <h1 class="text-6xl font-bold tracking-tight text-text-primary mb-2">404</h1>
+          <p class="text-lg text-text-secondary">Page not found</p>
+        </div>
+
+        <!-- Error Message -->
+        <p class="text-sm text-text-muted mb-8">
+          The page you're looking for doesn't exist or has been moved.
+        </p>
+
+        <!-- Navigation Options -->
+        <div class="space-y-3">
+          <a
+            href="/dashboard"
+            class="block w-full h-11 px-5 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 text-center flex items-center justify-center"
+          >
+            Go to Dashboard
+          </a>
+        </div>
+
+        <!-- Help Text -->
+        <div class="mt-8 pt-8 border-t border-border">
+          <p class="text-xs text-text-muted">
+            If you think this is an error, please check your navigation or
+            <a href="/dashboard" class="text-accent hover:underline"> return to the home page</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

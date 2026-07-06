@@ -204,6 +204,58 @@ function getCourseStats(courseId) {
   return { total, attended, absent, holidays, cancelled, late, onDuty, percentage };
 }
 
+// ─── Extra Classes ───────────────────────────────────────────
+
+function getExtraClasses() {
+  try {
+    const data = localStorage.getItem('att_extra_classes');
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveExtraClasses(data) {
+  localStorage.setItem('att_extra_classes', JSON.stringify(data));
+}
+
+function getExtraClassesForDate(dateStr) {
+  const allExtra = getExtraClasses();
+  return allExtra[dateStr] || [];
+}
+
+function addExtraClass(dateStr, courseId, startTime, endTime, notes = '') {
+  const allExtra = getExtraClasses();
+  if (!allExtra[dateStr]) {
+    allExtra[dateStr] = [];
+  }
+  
+  const id = `extra-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  
+  allExtra[dateStr].push({
+    id,
+    courseId,
+    startTime,
+    endTime,
+    notes,
+    isExtra: true,
+  });
+  
+  saveExtraClasses(allExtra);
+  return id;
+}
+
+function deleteExtraClass(dateStr, extraClassId) {
+  const allExtra = getExtraClasses();
+  if (allExtra[dateStr]) {
+    allExtra[dateStr] = allExtra[dateStr].filter(c => c.id !== extraClassId);
+    if (allExtra[dateStr].length === 0) {
+      delete allExtra[dateStr];
+    }
+    saveExtraClasses(allExtra);
+  }
+}
+
 function getOverallStats() {
   const courses = getCourses();
   let totalClasses = 0;
@@ -463,6 +515,12 @@ export {
   getPredictedPercentage,
   getAttendanceTrend,
   getCalendarData,
+  // Extra Classes
+  getExtraClasses,
+  saveExtraClasses,
+  getExtraClassesForDate,
+  addExtraClass,
+  deleteExtraClass,
   // Settings
   getSettings,
   updateSettings,

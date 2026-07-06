@@ -1,0 +1,843 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Mark Attendance" activeNav="mark">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 animate-fade-in">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
+          Mark Attendance
+        </h2>
+        <p class="text-sm text-text-muted mt-0.5">
+          Select a date and mark your attendance for each class
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          id="prev-day-btn"
+          class="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
+          aria-label="Previous day"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"></path>
+          </svg>
+        </button>
+        <button
+          id="today-btn"
+          class="h-9 px-4 bg-bg-tertiary hover:bg-bg-elevated text-text-primary text-sm font-medium rounded-lg transition-all"
+        >
+          Today
+        </button>
+        <button
+          id="next-day-btn"
+          class="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
+          aria-label="Next day"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+        </button>
+        <div class="relative">
+          <input
+            type="date"
+            id="date-picker"
+            class="h-9 px-3 bg-bg-tertiary border border-border rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all cursor-pointer"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Display Card -->
+    <div class="card p-4 sm:p-5 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold" id="selected-date-display">
+            <!-- Populated by JS -->
+          </h3>
+          <p class="text-sm text-text-muted mt-0.5" id="selected-day-display">
+            <!-- Populated by JS -->
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            id="mark-all-present-btn"
+            class="h-9 px-4 bg-success hover:bg-success-hover text-white text-sm font-medium rounded-lg transition-all duration-200 active:scale-95"
+          >
+            Mark All Present
+          </button>
+          <button
+            id="undo-btn"
+            class="h-9 px-4 bg-bg-tertiary hover:bg-bg-elevated text-text-secondary text-sm font-medium rounded-lg transition-all duration-200"
+          >
+            Undo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule List -->
+    <div id="schedule-container" class="space-y-3">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="card p-8 sm:p-12 text-center hidden">
+      <div class="w-14 h-14 rounded-2xl bg-bg-tertiary flex items-center justify-center mx-auto mb-4">
+        <svg class="w-7 h-7 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold mb-1">No Classes Scheduled</h3>
+      <p class="text-sm text-text-muted">
+        There are no classes scheduled for this day.
+      </p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card p-4 sm:p-5 mt-6">
+      <h3 class="text-sm font-semibold mb-3">Quick Actions</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button
+          id="add-extra-class-btn"
+          class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+        >
+          <span class="text-2xl">➕</span>
+          <span class="text-[11px] font-medium text-text-secondary">Add Extra Class</span>
+        </button>
+        <button
+          data-action="mark-day-holiday"
+          class="quick-action-btn flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+        >
+          <span class="text-2xl">🏖️</span>
+          <span class="text-[11px] font-medium text-text-secondary">Mark Holiday</span>
+        </button>
+        <button
+          data-action="mark-day-cancelled"
+          class="quick-action-btn flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+        >
+          <span class="text-2xl">🚫</span>
+          <span class="text-[11px] font-medium text-text-secondary">Mark Cancelled</span>
+        </button>
+        <button
+          data-action="clear-day"
+          class="quick-action-btn flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+        >
+          <span class="text-2xl">🗑️</span>
+          <span class="text-[11px] font-medium text-text-secondary">Clear Day</span>
+        </button>
+        <a
+          href="/dashboard"
+          class="flex flex-col items-center gap-2 p-3 rounded-lg bg-bg-tertiary hover:bg-bg-elevated transition-all text-center"
+        >
+          <span class="text-2xl">📊</span>
+          <span class="text-[11px] font-medium text-text-secondary">View Dashboard</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Extra Class Modal -->
+    <div
+      id="extra-class-modal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div class="card p-4 sm:p-6 w-[90%] max-w-md animate-scale-in">
+        <h4 class="text-sm font-semibold mb-4">Add Extra Class</h4>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-text-muted mb-1.5">Course</label>
+            <select
+              id="extra-class-course"
+              class="w-full h-10 px-3 bg-bg-tertiary border border-border rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+              <!-- Populated by JS -->
+            </select>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">Start Time</label>
+              <input
+                type="time"
+                id="extra-class-start"
+                class="w-full h-10 px-3 bg-bg-tertiary border border-border rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted mb-1.5">End Time</label>
+              <input
+                type="time"
+                id="extra-class-end"
+                class="w-full h-10 px-3 bg-bg-tertiary border border-border rounded-lg text-sm text-text-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-xs font-medium text-text-muted mb-1.5">Notes (optional)</label>
+            <input
+              type="text"
+              id="extra-class-notes"
+              placeholder="e.g. Extra lab session"
+              class="w-full h-10 px-3 bg-bg-tertiary border border-border rounded-lg text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            />
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mt-6">
+          <button
+            id="cancel-extra-class"
+            class="flex-1 h-9 text-xs font-medium text-text-secondary bg-bg-tertiary hover:bg-bg-elevated rounded-lg transition-all cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            id="save-extra-class"
+            class="flex-1 h-9 text-xs font-medium text-white bg-accent hover:bg-accent-hover rounded-lg transition-all active:scale-95 cursor-pointer"
+          >
+            Add Class
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import {
+      getCourses,
+      getCourseById,
+      getDaySchedule,
+      getDayName,
+      getSlotStatus,
+      markAttendance,
+      markDayStatus,
+      getDateRecord,
+      STATUS_TYPES,
+      getToday,
+      formatDate,
+      DAY_MAP,
+      getExtraClassesForDate,
+      addExtraClass,
+      deleteExtraClass,
+    } from "../scripts/store.js";
+
+    declare global {
+      interface Window {
+        showToast: (message: string, type?: string) => void;
+      }
+    }
+
+    // State
+    let selectedDate = new Date();
+    let lastAction = null;
+
+    // Helper to get all records
+    function getAllRecords() {
+      try {
+        const data = localStorage.getItem("att_records");
+        return data ? JSON.parse(data) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    // Status configuration
+    const statusConfig = {
+      present: {
+        label: "Present",
+        emoji: "✅",
+        color: "text-success",
+        bgColor: "bg-success-soft",
+        borderColor: "border-success/30",
+        hoverBg: "hover:bg-success-soft/80",
+      },
+      absent: {
+        label: "Absent",
+        emoji: "❌",
+        color: "text-danger",
+        bgColor: "bg-danger-soft",
+        borderColor: "border-danger/30",
+        hoverBg: "hover:bg-danger-soft/80",
+      },
+      late: {
+        label: "Late",
+        emoji: "⏰",
+        color: "text-warning",
+        bgColor: "bg-warning-soft",
+        borderColor: "border-warning/30",
+        hoverBg: "hover:bg-warning-soft/80",
+      },
+      on_duty: {
+        label: "On Duty",
+        emoji: "📋",
+        color: "text-cyan",
+        bgColor: "bg-cyan-soft",
+        borderColor: "border-cyan/30",
+        hoverBg: "hover:bg-cyan-soft/80",
+      },
+      holiday: {
+        label: "Holiday",
+        emoji: "🏖️",
+        color: "text-info",
+        bgColor: "bg-info-soft",
+        borderColor: "border-info/30",
+        hoverBg: "hover:bg-info-soft/80",
+      },
+      cancelled: {
+        label: "Cancelled",
+        emoji: "🚫",
+        color: "text-text-muted",
+        bgColor: "bg-bg-tertiary",
+        borderColor: "border-border",
+        hoverBg: "hover:bg-bg-elevated",
+      },
+    };
+
+    // DOM Elements
+    const scheduleContainer = document.getElementById("schedule-container");
+    const emptyState = document.getElementById("empty-state");
+    const selectedDateDisplay = document.getElementById("selected-date-display");
+    const selectedDayDisplay = document.getElementById("selected-day-display");
+    const prevDayBtn = document.getElementById("prev-day-btn");
+    const nextDayBtn = document.getElementById("next-day-btn");
+    const todayBtn = document.getElementById("today-btn");
+    const markAllPresentBtn = document.getElementById("mark-all-present-btn");
+    const undoBtn = document.getElementById("undo-btn");
+    const addExtraClassBtn = document.getElementById("add-extra-class-btn");
+    const extraClassModal = document.getElementById("extra-class-modal");
+    const cancelExtraClassBtn = document.getElementById("cancel-extra-class");
+    const saveExtraClassBtn = document.getElementById("save-extra-class");
+    const extraClassCourseSelect = document.getElementById("extra-class-course");
+    const extraClassStartInput = document.getElementById("extra-class-start");
+    const extraClassEndInput = document.getElementById("extra-class-end");
+    const extraClassNotesInput = document.getElementById("extra-class-notes");
+    const datePicker = document.getElementById("date-picker");
+
+    // Initialize
+    function init() {
+      renderDateDisplay();
+      renderSchedule();
+      setupEventListeners();
+    }
+
+    // Date Display
+    function renderDateDisplay() {
+      const options = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+      selectedDateDisplay!.textContent = selectedDate.toLocaleDateString("en-IN", options);
+      
+      // Update date picker value
+      datePicker!.value = formatDate(selectedDate);
+      
+      const dayName = getDayName(selectedDate);
+      const isToday = formatDate(selectedDate) === getToday();
+      const isSunday = dayName === "sunday";
+      
+      let dayText = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+      if (isToday) dayText += " — Today";
+      if (isSunday) dayText += " — Holiday";
+      
+      selectedDayDisplay!.textContent = dayText;
+    }
+
+    // Schedule Rendering
+    function renderSchedule() {
+      const dayName = getDayName(selectedDate);
+      const dateStr = formatDate(selectedDate);
+      const schedule = getDaySchedule(dayName);
+      const extraClassesForDate = getExtraClassesForDate(dateStr);
+      
+      // Combine regular schedule with extra classes
+      const allSlots = [
+        ...schedule.map(slot => ({ ...slot, isExtra: false })),
+        ...extraClassesForDate.map((extra: any) => ({
+          ...extra,
+          period: 999, // Extra classes don't have period numbers
+          isExtra: true,
+        }))
+      ];
+      
+      // Sort by time
+      allSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+      
+      scheduleContainer!.innerHTML = "";
+      
+      if (allSlots.length === 0 || dayName === "sunday") {
+        scheduleContainer!.classList.add("hidden");
+        emptyState!.classList.remove("hidden");
+        return;
+      }
+      
+      scheduleContainer!.classList.remove("hidden");
+      emptyState!.classList.add("hidden");
+      
+      allSlots.forEach((slot, index) => {
+        const course = getCourseById(slot.courseId);
+        if (!course) return;
+        
+        const currentStatus = slot.isExtra 
+          ? getSlotStatus(dateStr, slot.id, slot.courseId)
+          : getSlotStatus(dateStr, slot.period, slot.courseId);
+        
+        const card = createScheduleCard(slot, course, currentStatus, index, dateStr);
+        scheduleContainer!.appendChild(card);
+      });
+    }
+
+    // Create Schedule Card
+    function createScheduleCard(slot, course, currentStatus, index, dateStr) {
+      const card = document.createElement("div");
+      card.className = "card p-4 sm:p-5 animate-slide-up";
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.style.animationFillMode = "both";
+      
+      const statusInfo = currentStatus ? statusConfig[currentStatus] : null;
+      const slotKey = slot.isExtra ? slot.id : slot.period;
+      
+      card.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+          <!-- Course Info -->
+          <div class="flex items-start gap-3 flex-1">
+            <div class="w-1 h-12 rounded-full flex-shrink-0 mt-1" style="background: ${course.color}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                ${slot.isExtra 
+                  ? `<span class="text-[11px] font-mono text-accent">⭐ Extra</span>`
+                  : `<span class="text-[11px] font-mono text-text-muted">P${slot.period}</span>`
+                }
+                <span class="text-sm font-semibold">${course.code}</span>
+                <span class="text-sm text-text-secondary">${course.name}</span>
+                ${slot.isExtra && slot.notes ? `<span class="text-[11px] text-text-muted italic">(${slot.notes})</span>` : ""}
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs text-text-muted">${slot.startTime} – ${slot.endTime}</span>
+                ${statusInfo ? `
+                  <span class="status-badge ${statusInfo.color} ${statusInfo.bgColor} ${statusInfo.borderColor} px-2 py-0.5 rounded-full text-[11px] font-medium">
+                    ${statusInfo.emoji} ${statusInfo.label}
+                  </span>
+                ` : `
+                  <span class="status-badge text-text-muted bg-bg-tertiary px-2 py-0.5 rounded-full text-[11px] font-medium">
+                    Not marked
+                  </span>
+                `}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Status Buttons -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button
+              data-slot-key="${slotKey}"
+              data-slot-course="${slot.courseId}"
+              data-slot-is-extra="${slot.isExtra}"
+              data-status="present"
+              class="status-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${currentStatus === 'present' ? 'bg-success text-white' : 'bg-bg-tertiary text-text-secondary hover:bg-success-soft hover:text-success'}"
+              title="Mark as Present"
+            >
+              ✅ Present
+            </button>
+            <button
+              data-slot-key="${slotKey}"
+              data-slot-course="${slot.courseId}"
+              data-slot-is-extra="${slot.isExtra}"
+              data-status="absent"
+              class="status-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${currentStatus === 'absent' ? 'bg-danger text-white' : 'bg-bg-tertiary text-text-secondary hover:bg-danger-soft hover:text-danger'}"
+              title="Mark as Absent"
+            >
+              ❌ Absent
+            </button>
+            <button
+              data-slot-key="${slotKey}"
+              data-slot-course="${slot.courseId}"
+              data-slot-is-extra="${slot.isExtra}"
+              data-status="late"
+              class="status-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${currentStatus === 'late' ? 'bg-warning text-white' : 'bg-bg-tertiary text-text-secondary hover:bg-warning-soft hover:text-warning'}"
+              title="Mark as Late"
+            >
+              ⏰ Late
+            </button>
+            <button
+              data-slot-key="${slotKey}"
+              data-slot-course="${slot.courseId}"
+              data-slot-is-extra="${slot.isExtra}"
+              data-status="on_duty"
+              class="status-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${currentStatus === 'on_duty' ? 'bg-cyan text-white' : 'bg-bg-tertiary text-text-secondary hover:bg-cyan-soft hover:text-cyan'}"
+              title="Mark as On Duty"
+            >
+              📋 On Duty
+            </button>
+            <button
+              data-slot-key="${slotKey}"
+              data-slot-course="${slot.courseId}"
+              data-slot-is-extra="${slot.isExtra}"
+              data-status="cancelled"
+              class="status-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${currentStatus === 'cancelled' ? 'bg-text-muted text-white' : 'bg-bg-tertiary text-text-secondary hover:bg-bg-elevated hover:text-text-muted'}"
+              title="Mark as Cancelled"
+            >
+              🚫 Cancelled
+            </button>
+            ${slot.isExtra ? `
+              <button
+                data-delete-extra="${slot.id}"
+                data-delete-course="${slot.courseId}"
+                class="delete-extra-btn h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 bg-danger-soft text-danger hover:bg-danger hover:text-white"
+                title="Remove extra class"
+              >
+                🗑️
+              </button>
+            ` : ""}
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      // Date Navigation
+      prevDayBtn!.addEventListener("click", () => {
+        selectedDate.setDate(selectedDate.getDate() - 1);
+        renderDateDisplay();
+        renderSchedule();
+      });
+      
+      nextDayBtn!.addEventListener("click", () => {
+        selectedDate.setDate(selectedDate.getDate() + 1);
+        renderDateDisplay();
+        renderSchedule();
+      });
+      
+      todayBtn!.addEventListener("click", () => {
+        selectedDate = new Date();
+        renderDateDisplay();
+        renderSchedule();
+      });
+
+      // Date Picker
+      datePicker!.addEventListener("change", (e) => {
+        const newValue = (e.target as HTMLInputElement).value;
+        if (newValue) {
+          selectedDate = new Date(newValue + "T00:00:00");
+          renderDateDisplay();
+          renderSchedule();
+        }
+      });
+      
+      // Status Buttons
+      scheduleContainer!.addEventListener("click", (e) => {
+        const btn = (e.target as HTMLElement).closest(".status-btn");
+        if (!btn) return;
+        
+        const slotKey = btn.dataset.slotKey || "";
+        const courseId = btn.dataset.slotCourse || "";
+        const isExtra = btn.dataset.slotIsExtra === "true";
+        const status = btn.dataset.status || "";
+        const dateStr = formatDate(selectedDate);
+        
+        // Save for undo
+        const previousStatus = isExtra 
+          ? getSlotStatus(dateStr, slotKey, courseId)
+          : getSlotStatus(dateStr, parseInt(slotKey), courseId);
+        
+        lastAction = {
+          type: "single",
+          dateStr,
+          slotKey,
+          courseId,
+          isExtra,
+          previousStatus,
+          newStatus: status,
+        };
+        
+        if (isExtra) {
+          markAttendance(dateStr, slotKey, courseId, status);
+        } else {
+          markAttendance(dateStr, parseInt(slotKey), courseId, status);
+        }
+        
+        renderSchedule();
+        window.showToast(`Marked as ${statusConfig[status as keyof typeof statusConfig].label}`, "success");
+      });
+
+      // Delete Extra Class Button
+      scheduleContainer!.addEventListener("click", (e) => {
+        const btn = (e.target as HTMLElement).closest(".delete-extra-btn");
+        if (!btn) return;
+        
+        const extraClassId = btn.dataset.deleteExtra || "";
+        const courseId = btn.dataset.deleteCourse || "";
+        const dateStr = formatDate(selectedDate);
+        
+        if (confirm("Remove this extra class? This will also delete its attendance record.")) {
+          // Remove attendance record first
+          const records = getAllRecords();
+          if (records[dateStr]) {
+            const key = `${extraClassId}_${courseId}`;
+            delete records[dateStr][key];
+            if (Object.keys(records[dateStr]).length === 0) {
+              delete records[dateStr];
+            }
+            localStorage.setItem("att_records", JSON.stringify(records));
+          }
+          
+          // Remove extra class
+          deleteExtraClass(dateStr, extraClassId);
+          renderSchedule();
+          window.showToast("Extra class removed", "info");
+        }
+      });
+      
+      // Mark All Present
+      markAllPresentBtn!.addEventListener("click", () => {
+        const dayName = getDayName(selectedDate);
+        const dateStr = formatDate(selectedDate);
+        const schedule = getDaySchedule(dayName);
+        
+        if (schedule.length === 0) {
+          window.showToast("No classes to mark", "warning");
+          return;
+        }
+        
+        // Save for undo
+        const previousStates = schedule.map(slot => ({
+          period: slot.period,
+          courseId: slot.courseId,
+          previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
+        }));
+        
+        lastAction = {
+          type: "bulk",
+          dateStr,
+          previousStates,
+        };
+        
+        schedule.forEach(slot => {
+          markAttendance(dateStr, slot.period, slot.courseId, STATUS_TYPES.PRESENT);
+        });
+        
+        renderSchedule();
+        window.showToast("Marked all as present", "success");
+      });
+      
+      // Undo
+      undoBtn!.addEventListener("click", () => {
+        if (!lastAction) {
+          window.showToast("Nothing to undo", "warning");
+          return;
+        }
+        
+        if (lastAction.type === "single") {
+          const { dateStr, slotKey, courseId, isExtra, previousStatus } = lastAction;
+          const records = getAllRecords();
+          
+          // Ensure date object exists
+          if (!records[dateStr]) {
+            records[dateStr] = {};
+          }
+          
+          const key = `${slotKey}_${courseId}`;
+          if (previousStatus) {
+            // Restore the previous status
+            records[dateStr][key] = {
+              period: isExtra ? undefined : parseInt(slotKey),
+              courseId,
+              status: previousStatus,
+              timestamp: Date.now(),
+            };
+          } else {
+            // Remove the record if there was no previous status
+            delete records[dateStr][key];
+          }
+          
+          // Clean up empty date objects
+          if (Object.keys(records[dateStr]).length === 0) {
+            delete records[dateStr];
+          }
+          
+          localStorage.setItem("att_records", JSON.stringify(records));
+          window.showToast("Undid last action", "info");
+        } else if (lastAction.type === "bulk") {
+          const { dateStr, previousStates } = lastAction;
+          const records = getAllRecords();
+          
+          // Ensure date object exists
+          if (!records[dateStr]) {
+            records[dateStr] = {};
+          }
+          
+          // Restore each slot to its previous state
+          previousStates.forEach(({ period, courseId, previousStatus }) => {
+            const key = `${period}_${courseId}`;
+            if (previousStatus) {
+              // Restore the previous status
+              records[dateStr][key] = {
+                period,
+                courseId,
+                status: previousStatus,
+                timestamp: Date.now(),
+              };
+            } else {
+              // Remove the record if there was no previous status
+              delete records[dateStr][key];
+            }
+          });
+          
+          // Clean up empty date objects
+          if (Object.keys(records[dateStr]).length === 0) {
+            delete records[dateStr];
+          }
+          
+          localStorage.setItem("att_records", JSON.stringify(records));
+          window.showToast("Undid bulk action", "info");
+        }
+        
+        lastAction = null;
+        renderSchedule();
+      });
+      
+      // Quick Actions
+      document.querySelectorAll(".quick-action-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const action = btn.dataset.action;
+          const dayName = getDayName(selectedDate);
+          const dateStr = formatDate(selectedDate);
+          const schedule = getDaySchedule(dayName);
+          
+          if (schedule.length === 0) {
+            window.showToast("No classes scheduled for this day", "warning");
+            return;
+          }
+          
+          if (action === "mark-day-holiday") {
+            // Save for undo - get current states before marking
+            const previousStates = schedule.map(slot => ({
+              period: slot.period,
+              courseId: slot.courseId,
+              previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
+            }));
+            
+            lastAction = {
+              type: "bulk",
+              dateStr,
+              previousStates,
+            };
+            
+            markDayStatus(dateStr, schedule, STATUS_TYPES.HOLIDAY);
+            window.showToast("Marked day as holiday", "success");
+          } else if (action === "mark-day-cancelled") {
+            // Save for undo - get current states before marking
+            const previousStates = schedule.map(slot => ({
+              period: slot.period,
+              courseId: slot.courseId,
+              previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
+            }));
+            
+            lastAction = {
+              type: "bulk",
+              dateStr,
+              previousStates,
+            };
+            
+            markDayStatus(dateStr, schedule, STATUS_TYPES.CANCELLED);
+            window.showToast("Marked day as cancelled", "success");
+          } else if (action === "clear-day") {
+            // Save for undo
+            const previousStates = schedule.map(slot => ({
+              period: slot.period,
+              courseId: slot.courseId,
+              previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
+            }));
+            
+            lastAction = {
+              type: "bulk",
+              dateStr,
+              previousStates,
+            };
+            
+            const records = getAllRecords();
+            if (records[dateStr]) {
+              schedule.forEach(slot => {
+                const key = `${slot.period}_${slot.courseId}`;
+                delete records[dateStr][key];
+              });
+              // Clean up empty date objects
+              if (Object.keys(records[dateStr]).length === 0) {
+                delete records[dateStr];
+              }
+              localStorage.setItem("att_records", JSON.stringify(records));
+            }
+            window.showToast("Cleared day's attendance", "info");
+          }
+          
+          renderSchedule();
+        });
+      });
+
+      // Extra Class Modal
+      addExtraClassBtn!.addEventListener("click", () => {
+        const courses = getCourses();
+        extraClassCourseSelect!.innerHTML = courses.map((c: any) => 
+          `<option value="${c.id}">${c.code} - ${c.name}</option>`
+        ).join("");
+        
+        // Set default times
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const startStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        const endHours = hours + 1;
+        const endStr = `${String(endHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        
+        extraClassStartInput!.value = startStr;
+        extraClassEndInput!.value = endStr;
+        extraClassNotesInput!.value = "";
+        
+        extraClassModal!.classList.remove("hidden");
+      });
+
+      cancelExtraClassBtn!.addEventListener("click", () => {
+        extraClassModal!.classList.add("hidden");
+      });
+
+      saveExtraClassBtn!.addEventListener("click", () => {
+        const courseId = extraClassCourseSelect!.value;
+        const startTime = extraClassStartInput!.value;
+        const endTime = extraClassEndInput!.value;
+        const notes = extraClassNotesInput!.value.trim();
+        
+        if (!courseId || !startTime || !endTime) {
+          window.showToast("Please fill in all required fields", "warning");
+          return;
+        }
+        
+        if (startTime >= endTime) {
+          window.showToast("End time must be after start time", "warning");
+          return;
+        }
+        
+        const dateStr = formatDate(selectedDate);
+        addExtraClass(dateStr, courseId, startTime, endTime, notes);
+        
+        extraClassModal!.classList.add("hidden");
+        renderSchedule();
+        window.showToast("Extra class added", "success");
+      });
+
+      // Close modal on backdrop click
+      extraClassModal!.addEventListener("click", (e) => {
+        if (e.target === extraClassModal) {
+          extraClassModal!.classList.add("hidden");
+        }
+      });
+    }
+
+    // Start
+    init();
+  </script>
+</Layout>

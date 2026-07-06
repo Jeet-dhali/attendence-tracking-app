@@ -1,0 +1,682 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Analytics" activeNav="analytics">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 animate-fade-in">
+    <!-- Header -->
+    <div class="mb-6">
+      <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
+        Analytics
+      </h2>
+      <p class="text-sm text-text-muted mt-0.5">
+        Detailed attendance analysis and insights
+      </p>
+    </div>
+
+    <!-- Overall Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6" id="overall-stats">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4 sm:gap-6">
+      <!-- Left Column -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Course Breakdown -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-1">
+          <h3 class="text-sm font-semibold mb-4">Course Breakdown</h3>
+          <div id="course-breakdown" class="space-y-4">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Attendance Trend -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-2">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold">30-Day Trend</h3>
+            <div class="flex items-center gap-2">
+              <button
+                data-period="7"
+                class="trend-period-btn text-[11px] font-medium text-text-muted hover:text-text-primary px-2 py-1 rounded bg-bg-tertiary transition-all"
+              >
+                7D
+              </button>
+              <button
+                data-period="30"
+                class="trend-period-btn text-[11px] font-medium text-accent px-2 py-1 rounded bg-accent/10 transition-all"
+              >
+                30D
+              </button>
+              <button
+                data-period="90"
+                class="trend-period-btn text-[11px] font-medium text-text-muted hover:text-text-primary px-2 py-1 rounded bg-bg-tertiary transition-all"
+              >
+                90D
+              </button>
+            </div>
+          </div>
+          <div class="h-48 sm:h-56" id="trend-chart"></div>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold">Calendar View</h3>
+            <div class="flex items-center gap-2">
+              <button
+                id="prev-month"
+                class="p-1 rounded text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-all"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+              </button>
+              <span id="calendar-month" class="text-xs font-medium text-text-secondary"></span>
+              <button
+                id="next-month"
+                class="p-1 rounded text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-all"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+            <!-- Populated by JS -->
+          </div>
+          <div class="flex items-center justify-center gap-4 mt-4 text-[11px] text-text-muted">
+            <div class="flex items-center gap-1">
+              <div class="w-3 h-3 rounded-full bg-success"></div>
+              <span>75%+</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-3 h-3 rounded-full bg-warning"></div>
+              <span>60-74%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-3 h-3 rounded-full bg-danger"></div>
+              <span>&lt;60%</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <div class="w-3 h-3 rounded-full bg-bg-tertiary"></div>
+              <span>No data</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Alerts -->
+        <div id="alerts-section" class="card p-4 sm:p-5 animate-slide-up stagger-4 hidden">
+          <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-danger animate-pulse-soft"></span>
+            Alerts
+          </h3>
+          <div id="alerts-list" class="space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Bunk Calculator -->
+        <div id="bunk-calculator" class="card p-4 sm:p-5 animate-slide-up stagger-5">
+          <h3 class="text-sm font-semibold mb-4">Bunk Calculator</h3>
+          <div id="bunk-calculator-content" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-6">
+          <h3 class="text-sm font-semibold mb-4">Quick Stats</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-text-muted">Current Streak</span>
+              <span id="quick-streak" class="text-sm font-semibold text-text-primary">—</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-text-muted">Best Streak</span>
+              <span id="best-streak" class="text-sm font-semibold text-text-primary">—</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-text-muted">Total Days Tracked</span>
+              <span id="total-days" class="text-sm font-semibold text-text-primary">—</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-text-muted">This Week</span>
+              <span id="this-week" class="text-sm font-semibold text-text-primary">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Data -->
+        <div class="card p-4 sm:p-5 animate-slide-up stagger-7">
+          <h3 class="text-sm font-semibold mb-4">Data Management</h3>
+          <div class="space-y-2">
+            <button
+              id="export-btn"
+              class="w-full h-9 px-4 bg-bg-tertiary hover:bg-bg-elevated text-text-primary text-sm font-medium rounded-lg transition-all"
+            >
+              Export Data
+            </button>
+            <button
+              id="reset-btn"
+              class="w-full h-9 px-4 bg-danger-soft hover:bg-danger/20 text-danger text-sm font-medium rounded-lg transition-all"
+            >
+              Reset All Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import {
+      getCourses,
+      getCourseById,
+      getOverallStats,
+      getCurrentStreak,
+      getCourseStats,
+      getBunkableClasses,
+      getClassesNeeded,
+      getAttendanceTrend,
+      getCalendarData,
+      exportData,
+      resetAllData,
+      formatDate,
+      getToday,
+    } from "../scripts/store.js";
+
+    declare global {
+      interface Window {
+        showToast: (message: string, type?: string) => void;
+      }
+    }
+
+    // State
+    let calendarDate = new Date();
+    let trendPeriod = 30;
+
+    // DOM Elements
+    const overallStats = document.getElementById("overall-stats");
+    const courseBreakdown = document.getElementById("course-breakdown");
+    const trendChart = document.getElementById("trend-chart");
+    const calendarGrid = document.getElementById("calendar-grid");
+    const calendarMonth = document.getElementById("calendar-month");
+    const alertsSection = document.getElementById("alerts-section");
+    const alertsList = document.getElementById("alerts-list");
+    const bunkCalculatorContent = document.getElementById("bunk-calculator-content");
+    const quickStreak = document.getElementById("quick-streak");
+    const bestStreak = document.getElementById("best-streak");
+    const totalDays = document.getElementById("total-days");
+    const thisWeekEl = document.getElementById("this-week");
+
+    // Initialize
+    function init() {
+      renderOverallStats();
+      renderCourseBreakdown();
+      renderTrendChart();
+      renderCalendar();
+      renderAlerts();
+      renderBunkCalculator();
+      renderQuickStats();
+      setupEventListeners();
+    }
+
+    // Helper functions
+    function getStatusColor(pct) {
+      if (pct >= 75)
+        return {
+          text: "text-success",
+          bg: "bg-success-soft",
+          border: "border-success/20",
+        };
+      if (pct >= 60)
+        return {
+          text: "text-warning",
+          bg: "bg-warning-soft",
+          border: "border-warning/20",
+        };
+      return {
+        text: "text-danger",
+        bg: "bg-danger-soft",
+        border: "border-danger/20",
+      };
+    }
+
+    // Overall Stats
+    function renderOverallStats() {
+      const stats = getOverallStats();
+      const streak = getCurrentStreak();
+      const pctColor = getStatusColor(stats.percentage);
+
+      const cards = [
+        {
+          label: "Overall Attendance",
+          value: `${stats.percentage}%`,
+          icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>',
+          color: pctColor.text,
+          bgColor: pctColor.bg,
+        },
+        {
+          label: "Classes Attended",
+          value: `${stats.totalAttended}`,
+          sub: `/ ${stats.totalClasses} total`,
+          icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path></svg>',
+          color: "text-accent",
+          bgColor: "bg-accent-soft",
+        },
+        {
+          label: "Classes Missed",
+          value: `${stats.totalAbsent}`,
+          icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>',
+          color: "text-danger",
+          bgColor: "bg-danger-soft",
+        },
+        {
+          label: "Current Streak",
+          value: streak > 0 ? `🔥 ${streak}` : "0",
+          sub: streak > 0 ? "days" : "Start today!",
+          icon: '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>',
+          color: "text-warning",
+          bgColor: "bg-warning-soft",
+        },
+      ];
+
+      overallStats!.innerHTML = cards
+        .map(
+          (card, i) => `
+        <div class="card p-3 sm:p-4 animate-slide-up" style="animation-delay: ${i * 0.05}s; animation-fill-mode: both;">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-7 h-7 rounded-lg ${card.bgColor} flex items-center justify-center ${card.color}">
+              ${card.icon}
+            </div>
+          </div>
+          <div class="text-xl sm:text-2xl font-semibold tracking-tight ${card.color}">${card.value}</div>
+          <div class="text-[11px] text-text-muted mt-0.5">${card.label}</div>
+          ${card.sub ? `<div class="text-[10px] text-text-muted">${card.sub}</div>` : ""}
+        </div>
+      `,
+        )
+        .join("");
+    }
+
+    // Course Breakdown
+    function renderCourseBreakdown() {
+      const stats = getOverallStats();
+      
+      if (stats.courseStats.length === 0) {
+        courseBreakdown!.innerHTML = `
+          <div class="py-6 text-center">
+            <p class="text-sm text-text-muted">No courses configured.</p>
+            <a href="/setup" class="text-sm text-accent hover:underline">Set up courses →</a>
+          </div>
+        `;
+        return;
+      }
+
+      courseBreakdown!.innerHTML = stats.courseStats
+        .map((course) => {
+          const color = getStatusColor(course.percentage);
+          const bunkable = getBunkableClasses(course.id);
+          const needed = getClassesNeeded(course.id);
+
+          return `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full" style="background: ${course.color}"></div>
+                <span class="text-xs font-medium">${course.code}</span>
+                <span class="text-xs text-text-secondary">${course.name}</span>
+              </div>
+              <span class="text-sm font-semibold ${color.text}">${course.percentage}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${Math.min(course.percentage, 100)}%; background: ${course.color}"></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-text-muted">
+              <span>${course.attended}/${course.total} classes</span>
+              <span>Target: ${course.minAttendance}%</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              ${bunkable > 0
+                ? `<span class="text-success">Can skip ${bunkable} more</span>`
+                : course.percentage < course.minAttendance
+                  ? `<span class="text-danger">Need ${needed} more</span>`
+                  : `<span class="text-text-muted">On track</span>`
+              }
+              <span class="text-text-muted">${course.holidays} holidays</span>
+            </div>
+          </div>
+        `;
+        })
+        .join("");
+    }
+
+    // Trend Chart
+    function renderTrendChart() {
+      const trendData = getAttendanceTrend(trendPeriod);
+      const validData = trendData.filter((d) => d.percentage !== null);
+
+      if (validData.length < 2) {
+        trendChart!.innerHTML = `
+          <div class="h-full flex items-center justify-center">
+            <p class="text-sm text-text-muted">Start marking attendance to see trends</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Simple SVG chart
+      const w = 500;
+      const h = 200;
+      const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+      const chartW = w - padding.left - padding.right;
+      const chartH = h - padding.top - padding.bottom;
+
+      const maxPct = 100;
+      const minPct = 0;
+      const points = validData.map((d, i) => {
+        const x = padding.left + (i / (validData.length - 1)) * chartW;
+        const y =
+          padding.top +
+          chartH -
+          ((d.percentage! - minPct) / (maxPct - minPct)) * chartH;
+        return { x, y, ...d };
+      });
+
+      const pathD = points
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+        .join(" ");
+      const areaD =
+        pathD +
+        ` L ${points[points.length - 1].x} ${h - padding.bottom} L ${points[0].x} ${h - padding.bottom} Z`;
+
+      trendChart!.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" class="w-full h-full">
+          <!-- Grid lines -->
+          <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${h - padding.bottom}" stroke="var(--color-border)" stroke-width="0.5"/>
+          <line x1="${padding.left}" y1="${h - padding.bottom}" x2="${w - padding.right}" y2="${h - padding.bottom}" stroke="var(--color-border)" stroke-width="0.5"/>
+          ${[0, 25, 50, 75, 100]
+            .map((pct) => {
+              const y = padding.top + chartH - (pct / 100) * chartH;
+              return `
+              <line x1="${padding.left}" y1="${y}" x2="${w - padding.right}" y2="${y}" stroke="var(--color-border)" stroke-width="0.3" stroke-dasharray="4,4"/>
+              <text x="${padding.left - 4}" y="${y + 3}" fill="var(--color-text-muted)" font-size="8" text-anchor="end" font-family="var(--font-mono)">${pct}%</text>
+            `;
+            })
+            .join("")}
+          <!-- 75% threshold line -->
+          <line x1="${padding.left}" y1="${padding.top + chartH - (75 / 100) * chartH}" x2="${w - padding.right}" y2="${padding.top + chartH - (75 / 100) * chartH}" stroke="var(--color-warning)" stroke-width="0.5" stroke-dasharray="6,3" opacity="0.6"/>
+          <!-- Area fill -->
+          <path d="${areaD}" fill="url(#trendGrad)" opacity="0.3"/>
+          <!-- Line -->
+          <path d="${pathD}" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Points -->
+          ${points.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="var(--color-accent)" stroke="var(--color-bg-secondary)" stroke-width="1.5"/>`).join("")}
+          <defs>
+            <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
+    }
+
+    // Calendar View
+    function renderCalendar() {
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+      const calendarData = getCalendarData(year, month);
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      calendarMonth!.textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+      let html = ["S", "M", "T", "W", "T", "F", "S"].map(day => 
+        `<div class="text-[10px] font-medium text-text-muted text-center py-1">${day}</div>`
+      ).join("");
+
+      // Empty cells for days before the first day of the month
+      for (let i = 0; i < firstDay; i++) {
+        html += `<div></div>`;
+      }
+
+      // Days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayData = calendarData[day];
+        const isToday = isCurrentMonth && day === today.getDate();
+        
+        let bgColor = "bg-bg-tertiary";
+        let textColor = "text-text-muted";
+        
+        if (dayData) {
+          if (dayData.isHoliday || dayData.isCancelled) {
+            bgColor = "bg-bg-tertiary";
+            textColor = "text-text-muted";
+          } else if (dayData.percentage !== null) {
+            if (dayData.percentage >= 75) {
+              bgColor = "bg-success";
+              textColor = "text-white";
+            } else if (dayData.percentage >= 60) {
+              bgColor = "bg-warning";
+              textColor = "text-white";
+            } else {
+              bgColor = "bg-danger";
+              textColor = "text-white";
+            }
+          }
+        }
+
+        html += `
+          <div class="aspect-square flex items-center justify-center rounded text-xs font-medium ${bgColor} ${textColor} ${isToday ? 'ring-2 ring-accent' : ''} cursor-pointer hover:opacity-80 transition-all" title="${dayData ? `${dayData.attended}/${dayData.total} - ${dayData.percentage}%` : 'No data'}">
+            ${day}
+          </div>
+        `;
+      }
+
+      calendarGrid!.innerHTML = html;
+    }
+
+    // Alerts
+    function renderAlerts() {
+      const stats = getOverallStats();
+      const alerts = stats.courseStats.filter(
+        (c) => c.percentage < c.minAttendance && c.total > 0,
+      );
+
+      if (alerts.length === 0) {
+        alertsSection!.classList.add("hidden");
+        return;
+      }
+
+      alertsSection!.classList.remove("hidden");
+      alertsList!.innerHTML = alerts
+        .map(
+          (c) => `
+        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-danger-soft/50 border border-danger/10">
+          <span class="text-danger text-sm">⚠</span>
+          <div class="flex-1 min-w-0">
+            <span class="text-xs font-medium">${c.code}</span>
+            <span class="text-[11px] text-text-muted"> — ${c.percentage}% (need ${c.minAttendance}%)</span>
+          </div>
+        </div>
+      `,
+        )
+        .join("");
+    }
+
+    // Bunk Calculator
+    function renderBunkCalculator() {
+      const stats = getOverallStats();
+      
+      if (stats.courseStats.length === 0) {
+        bunkCalculatorContent!.innerHTML = `
+          <div class="py-4 text-center">
+            <p class="text-sm text-text-muted">No courses configured.</p>
+          </div>
+        `;
+        return;
+      }
+
+      bunkCalculatorContent!.innerHTML = stats.courseStats
+        .map((course) => {
+          const bunkable = getBunkableClasses(course.id);
+          const needed = getClassesNeeded(course.id);
+          const color = getStatusColor(course.percentage);
+
+          return `
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-bg-tertiary/50">
+            <div class="w-2 h-2 rounded-full flex-shrink-0" style="background: ${course.color}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium truncate">${course.code}</span>
+                <span class="text-xs font-semibold ${color.text}">${course.percentage}%</span>
+              </div>
+              <div class="text-[11px] text-text-muted">
+                ${bunkable > 0
+                  ? `Can skip <span class="text-success font-medium">${bunkable}</span> more`
+                  : `Need <span class="text-danger font-medium">${needed}</span> more`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+        })
+        .join("");
+    }
+
+    // Quick Stats
+    function renderQuickStats() {
+      const streak = getCurrentStreak();
+      const stats = getOverallStats();
+      
+      quickStreak!.textContent = streak > 0 ? `${streak} days` : "0 days";
+      
+      // Calculate best streak
+      const records = JSON.parse(localStorage.getItem("att_records") || "{}");
+      const dates = Object.keys(records).sort();
+      let bestStreak = 0;
+      let currentStreak = 0;
+      
+      for (const dateStr of dates) {
+        const dayRecords = records[dateStr];
+        const entries = Object.values(dayRecords);
+        const conductedEntries = entries.filter((e: any) => 
+          ["present", "absent", "late", "on_duty"].includes(e.status)
+        );
+        
+        if (conductedEntries.length === 0) continue;
+        
+        const allPresent = conductedEntries.every((e: any) => 
+          ["present", "late", "on_duty"].includes(e.status)
+        );
+        
+        if (allPresent) {
+          currentStreak++;
+          bestStreak = Math.max(bestStreak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      }
+      
+      bestStreak!.textContent = `${bestStreak} days`;
+      totalDays!.textContent = `${dates.length} days`;
+      
+      // This week's attendance
+      const today = new Date();
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay());
+      
+      let weekAttended = 0;
+      let weekTotal = 0;
+      
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(weekStart);
+        d.setDate(weekStart.getDate() + i);
+        const dateStr = d.toISOString().split("T")[0];
+        
+        if (records[dateStr]) {
+          Object.values(records[dateStr]).forEach((entry: any) => {
+            if (["present", "absent", "late", "on_duty"].includes(entry.status)) {
+              weekTotal++;
+              if (["present", "late", "on_duty"].includes(entry.status)) {
+                weekAttended++;
+              }
+            }
+          });
+        }
+      }
+      
+      const weekPct = weekTotal > 0 ? Math.round((weekAttended / weekTotal) * 100) : 0;
+      thisWeekEl!.textContent = `${weekPct}% (${weekAttended}/${weekTotal})`;
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      // Trend period buttons
+      document.querySelectorAll(".trend-period-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const period = parseInt(btn.dataset.period || "30");
+          trendPeriod = period;
+          
+          document.querySelectorAll(".trend-period-btn").forEach((b) => {
+            b.classList.remove("text-accent", "bg-accent/10");
+            b.classList.add("text-text-muted", "bg-bg-tertiary");
+          });
+          btn.classList.remove("text-text-muted", "bg-bg-tertiary");
+          btn.classList.add("text-accent", "bg-accent/10");
+          
+          renderTrendChart();
+        });
+      });
+
+      // Calendar navigation
+      document.getElementById("prev-month")!.addEventListener("click", () => {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        renderCalendar();
+      });
+
+      document.getElementById("next-month")!.addEventListener("click", () => {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        renderCalendar();
+      });
+
+      // Export data
+      document.getElementById("export-btn")!.addEventListener("click", () => {
+        const data = exportData();
+        const blob = new Blob([data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `attendance-backup-${getToday()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        window.showToast("Data exported successfully", "success");
+      });
+
+      // Reset data
+      document.getElementById("reset-btn")!.addEventListener("click", () => {
+        if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+          resetAllData();
+          window.location.reload();
+        }
+      });
+    }
+
+    // Start
+    init();
+  </script>
+</Layout>

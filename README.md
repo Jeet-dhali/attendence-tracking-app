@@ -1,46 +1,114 @@
-# Astro Starter Kit: Basics
+<div align="center">
 
-```sh
-npm create astro@latest -- --template basics
+# 📚 Attendance Tracker
+
+**A modern, beautifully designed attendance tracking application built with Astro**
+
+[![Astro Badge](https://img.shields.io/badge/Astro-7.0.6-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
+
+</div>
+
+---
+
+## ✨ Features
+
+- 🎯 **Dashboard** - Quick overview of your attendance at a glance
+- ✅ **Mark Attendance** - Easy attendance marking with date navigation
+- 📊 **Advanced Analytics** - Deep insights with heat maps, trends, and predictions
+- 🎓 **Bunk Calculator** - Smart planning for your academic freedom
+- 📅 **Calendar View** - Visual attendance calendar with color-coded days
+- 💾 **Local Storage** - All data stored locally in your browser
+- 🌙 **Dark Mode** - Beautiful dark theme by default
+- 📱 **Responsive** - Works perfectly on desktop and mobile
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed
+- npm or yarn package manager
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/attendance-tracker.git
+cd attendance-tracker
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open [http://localhost:4321](http://localhost:4321) in your browser.
 
-## 🚀 Project Structure
+### Build for Production
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```bash
+npm run build
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+The built files will be in the `dist/` directory.
 
-## 🧞 Commands
+## 📁 Project Structure
 
-All commands are run from the root of the project, from a terminal:
+```
+attendance-tracker/
+├── public/           # Static assets
+├── src/
+│   ├── assets/       # Images and SVGs
+│   ├── components/   # Reusable components
+│   ├── layouts/      # Page layouts
+│   ├── pages/        # Route pages
+│   ├── scripts/      # Utility scripts
+│   └── styles/       # Global styles
+├── astro.config.mjs  # Astro configuration
+├── package.json      # Dependencies
+└── tsconfig.json     # TypeScript config
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 🎨 Design System
 
-## 👀 Want to learn more?
+Built with a Vercel-inspired design system featuring:
+- Clean, minimal aesthetics
+- Smooth animations and transitions
+- Accessible color contrasts
+- Consistent spacing and typography
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📱 Pages
+
+- **Dashboard** (`/`) - Overview and quick actions
+- **Mark Attendance** (`/mark`) - Daily attendance tracking
+- **Analytics** (`/analytics`) - Advanced analytics and insights
+- **Bunk Calculator** (`/bunk`) - Smart bunk planning
+- **Setup** (`/setup`) - Initial configuration
+
+## 🔧 Configuration
+
+On first launch, you'll be guided through:
+1. Adding your courses
+2. Setting up your weekly timetable
+3. Configuring attendance targets
+
+## 💾 Data Storage
+
+All data is stored locally in your browser's localStorage. No data is sent to any server.
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+
+Built with ❤️ using [Astro](https://astro.build)
+
+</div>

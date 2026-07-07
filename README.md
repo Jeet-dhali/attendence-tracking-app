@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📚 Attendance Tracker
+# 📚 MyAttendTracker
 
 **A modern, beautifully designed attendance tracking application built with Astro**
 

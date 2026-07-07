@@ -4,7 +4,7 @@ interface Props {
   activeNav?: string;
 }
 
-const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
+const { title = "MyAttendTracker", activeNav = "dashboard" } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,15 +20,26 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
       name="keywords"
       content="attendance tracker, college attendance, student attendance, timetable, attendance calculator"
     />
-    <meta name="author" content="AttendEase" />
+    <meta name="author" content="MyAttendTracker" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="MyAttend" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="https://myattendtracker.com/sitemap.xml" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>{title} — AttendEase</title>
+    <title>{title} — MyAttendTracker</title>
   </head>
   <body class="min-h-screen bg-bg-primary text-text-primary font-sans">
     <!-- Sidebar (Desktop) -->
@@ -52,12 +63,11 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
               stroke-linejoin="round"
             >
               <path d="M9 11l3 3 8-8"></path>
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-              ></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
             </svg>
           </div>
           <div>
-            <h1 class="text-base font-semibold tracking-tight">AttendEase</h1>
+            <h1 class="text-base font-semibold tracking-tight">MyAttendTracker</h1>
             <p class="text-[11px] text-text-muted font-mono">v1.0</p>
           </div>
         </a>
@@ -81,7 +91,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -93,7 +103,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           Dashboard
         </a>
 
-        <a
+        <!--<a
           href="/"
           id="nav-home"
           data-nav="home"
@@ -109,14 +119,14 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           </svg>
           Home
-        </a>
+        </a>-->
 
         <a
           href="/mark"
@@ -134,7 +144,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -160,7 +170,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -186,7 +196,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -219,7 +229,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -246,7 +256,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -272,7 +282,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -306,7 +316,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -331,7 +341,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -343,7 +353,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
@@ -375,11 +385,10 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
             stroke-linejoin="round"
           >
             <path d="M9 11l3 3 8-8"></path>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-            ></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
           </svg>
         </div>
-        <span class="text-sm font-semibold tracking-tight">AttendEase</span>
+        <span class="text-sm font-semibold tracking-tight">MyAttendTracker</span>
       </a>
       <button
         id="theme-toggle-mobile"
@@ -391,7 +400,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -403,7 +412,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -433,7 +442,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -457,7 +466,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -479,7 +488,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -501,7 +510,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -523,7 +532,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
@@ -546,7 +555,7 @@ const { title = "AttendEase", activeNav = "dashboard" } = Astro.props;
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         >

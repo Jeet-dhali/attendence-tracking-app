@@ -245,11 +245,13 @@ body {
   to { opacity: 0; transform: translateX(24px); }
 }
 
-/* Date picker icon color */
-input[type="date"]::-webkit-calendar-picker-indicator {
+/* Native picker icon color */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
 
-html[data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator {
+html[data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="light"] input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(0);
 }

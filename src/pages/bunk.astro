@@ -15,7 +15,7 @@ import "../styles/global.css";
     <!-- Header -->
     <div class="mb-6">
       <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
-        🎓 Bunk Calculator
+         Bunk Calculator
       </h2>
       <p class="text-sm text-text-muted mt-0.5">
         Smart planning for your academic freedom
@@ -90,9 +90,6 @@ import "../styles/global.css";
       getRecords,
       getDaySchedule,
       getDayName,
-      formatDate,
-      getToday,
-      STATUS_TYPES,
     } from "../scripts/store.js";
 
     declare global {
@@ -100,6 +97,52 @@ import "../styles/global.css";
         showToast: (message: string, type?: string) => void;
       }
     }
+
+    type Course = {
+      id: string;
+      code: string;
+      name: string;
+      color: string;
+      minAttendance: number;
+    };
+
+    type CourseStats = {
+      total: number;
+      attended: number;
+      absent: number;
+      percentage: number;
+    };
+
+    type ScheduleSlot = {
+      courseId: string;
+      startTime: string;
+    };
+
+    type AttendanceEntry = {
+      courseId: string;
+      status: string;
+      timestamp?: number;
+    };
+
+    type AttendanceRecords = Record<string, Record<string, AttendanceEntry>>;
+
+    type Recommendation = {
+      type: "urgent" | "info" | "warning" | "danger";
+      icon: string;
+      message: string;
+    };
+
+    type BunkHistoryItem = {
+      date: string;
+      course: Course;
+      timestamp?: number;
+    };
+
+    type CourseBunkSummary = {
+      course: Course;
+      count: number;
+      lastBunk: string | null;
+    };
 
     // Initialize
     function init() {
@@ -112,13 +155,13 @@ import "../styles/global.css";
     }
 
     // Helper functions
-    function getStatusColor(pct, target) {
+    function getStatusColor(pct: number, target: number) {
       if (pct >= target) return "text-success";
       if (pct >= target - 10) return "text-warning";
       return "text-danger";
     }
 
-    function getStatusBg(pct, target) {
+    function getStatusBg(pct: number, target: number) {
       if (pct >= target) return "bg-success-soft";
       if (pct >= target - 10) return "bg-warning-soft";
       return "bg-danger-soft";
@@ -126,7 +169,7 @@ import "../styles/global.css";
 
     // Bunk Balance
     function renderBunkBalance() {
-      const courses = getCourses();
+      const courses = getCourses() as Course[];
       
       if (courses.length === 0) {
         document.getElementById("bunk-balance")!.innerHTML = `
@@ -138,10 +181,10 @@ import "../styles/global.css";
         return;
       }
 
-      let html = courses.map(course => {
-        const stats = getCourseStats(course.id);
-        const bunkable = getBunkableClasses(course.id);
-        const needed = getClassesNeeded(course.id);
+      let html = courses.map((course: Course) => {
+        const stats = getCourseStats(course.id) as CourseStats;
+        const bunkable = getBunkableClasses(course.id) as number;
+        const needed = getClassesNeeded(course.id) as number;
         const pctColor = getStatusColor(stats.percentage, course.minAttendance);
         const pctBg = getStatusBg(stats.percentage, course.minAttendance);
         
@@ -217,7 +260,7 @@ import "../styles/global.css";
 
     // What-If Calculator
     function renderWhatIfCalculator() {
-      const courses = getCourses();
+      const courses = getCourses() as Course[];
       
       if (courses.length === 0) {
         document.getElementById("what-if-calculator")!.innerHTML = `
@@ -228,8 +271,8 @@ import "../styles/global.css";
         return;
       }
 
-      let html = courses.map(course => {
-        const stats = getCourseStats(course.id);
+      let html = courses.map((course: Course) => {
+        const stats = getCourseStats(course.id) as CourseStats;
         
         return `
           <div class="p-4 rounded-lg bg-bg-tertiary/50 border border-border">
@@ -276,9 +319,13 @@ import "../styles/global.css";
       document.querySelectorAll('.what-if-slider').forEach(slider => {
         slider.addEventListener('input', (e) => {
           const courseId = (e.target as HTMLElement).dataset.course;
+          if (!courseId) return;
+
           const skipCount = parseInt((e.target as HTMLInputElement).value);
-          const course = getCourseById(courseId);
-          const stats = getCourseStats(courseId);
+          const course = getCourseById(courseId) as Course | null;
+          if (!course) return;
+
+          const stats = getCourseStats(courseId) as CourseStats;
           
           // Calculate new attendance
           const newTotal = stats.total + skipCount;
@@ -286,7 +333,9 @@ import "../styles/global.css";
           
           // Update display
           const container = (e.target as HTMLElement).closest('.p-4');
-          container.querySelector('.what-if-value')!.textContent = skipCount;
+          if (!container) return;
+
+          container.querySelector('.what-if-value')!.textContent = String(skipCount);
           container.querySelector('.what-if-result')!.textContent = `${newPct}%`;
           
           const statusEl = container.querySelector('.what-if-status')!;
@@ -298,9 +347,9 @@ import "../styles/global.css";
 
     // Recovery Calculator
     function renderRecoveryCalculator() {
-      const courses = getCourses();
-      const atRiskCourses = courses.filter(course => {
-        const stats = getCourseStats(course.id);
+      const courses = getCourses() as Course[];
+      const atRiskCourses = courses.filter((course: Course) => {
+        const stats = getCourseStats(course.id) as CourseStats;
         return stats.percentage < course.minAttendance && stats.total > 0;
       });
       
@@ -314,9 +363,9 @@ import "../styles/global.css";
         return;
       }
 
-      let html = atRiskCourses.map(course => {
-        const stats = getCourseStats(course.id);
-        const needed = getClassesNeeded(course.id);
+      let html = atRiskCourses.map((course: Course) => {
+        const stats = getCourseStats(course.id) as CourseStats;
+        const needed = getClassesNeeded(course.id) as number;
         const gap = course.minAttendance - stats.percentage;
         
         return `
@@ -361,10 +410,8 @@ import "../styles/global.css";
 
     // Bunk Planner
     function renderBunkPlanner() {
-      const courses = getCourses();
+      const courses = getCourses() as Course[];
       const today = new Date();
-      const dayName = getDayName(today);
-      const schedule = getDaySchedule(dayName);
       
       if (courses.length === 0) {
         document.getElementById("bunk-planner")!.innerHTML = `
@@ -381,11 +428,10 @@ import "../styles/global.css";
       for (let i = 0; i < 7; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
-        const dateStr = formatDate(date);
         const displayDate = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
         const isToday = i === 0;
         
-        const daySchedule = getDaySchedule(getDayName(date));
+        const daySchedule = getDaySchedule(getDayName(date)) as ScheduleSlot[];
         
         if (daySchedule.length === 0) {
           html += `
@@ -408,10 +454,11 @@ import "../styles/global.css";
             <div class="space-y-2">
         `;
         
-        daySchedule.forEach(slot => {
-          const course = getCourseById(slot.courseId);
-          const stats = getCourseStats(course.id);
-          const bunkable = getBunkableClasses(course.id);
+        daySchedule.forEach((slot: ScheduleSlot) => {
+          const course = getCourseById(slot.courseId) as Course | null;
+          if (!course) return;
+
+          const bunkable = getBunkableClasses(course.id) as number;
           const canSkip = bunkable > 0;
           
           html += `
@@ -440,12 +487,12 @@ import "../styles/global.css";
 
     // Smart Recommendations
     function renderRecommendations() {
-      const courses = getCourses();
-      const recommendations = [];
+      const courses = getCourses() as Course[];
+      const recommendations: Recommendation[] = [];
       
-      courses.forEach(course => {
-        const stats = getCourseStats(course.id);
-        const bunkable = getBunkableClasses(course.id);
+      courses.forEach((course: Course) => {
+        const stats = getCourseStats(course.id) as CourseStats;
+        const bunkable = getBunkableClasses(course.id) as number;
         
         if (stats.percentage < course.minAttendance) {
           recommendations.push({
@@ -484,7 +531,7 @@ import "../styles/global.css";
         return;
       }
 
-      let html = recommendations.map(rec => {
+      let html = recommendations.map((rec: Recommendation) => {
         const bgColor = rec.type === 'urgent' ? 'bg-danger-soft' : rec.type === 'warning' ? 'bg-warning-soft' : rec.type === 'danger' ? 'bg-bg-elevated' : 'bg-info-soft';
         
         return `
@@ -500,14 +547,13 @@ import "../styles/global.css";
 
     // Bunk History
     function renderBunkHistory() {
-      const records = getRecords();
-      const courses = getCourses();
-      const bunkHistory = [];
+      const records = getRecords() as AttendanceRecords;
+      const bunkHistory: BunkHistoryItem[] = [];
       
       Object.entries(records).forEach(([dateStr, dayRecords]) => {
-        Object.values(dayRecords).forEach((entry: any) => {
+        Object.values(dayRecords).forEach((entry: AttendanceEntry) => {
           if (entry.status === 'absent') {
-            const course = getCourseById(entry.courseId);
+            const course = getCourseById(entry.courseId) as Course | null;
             if (course) {
               bunkHistory.push({
                 date: dateStr,
@@ -533,18 +579,21 @@ import "../styles/global.css";
       }
 
       // Group by course
-      const courseBunks = {};
-      bunkHistory.forEach(bunk => {
+      const courseBunks: Record<string, CourseBunkSummary> = {};
+      bunkHistory.forEach((bunk: BunkHistoryItem) => {
         if (!courseBunks[bunk.course.id]) {
           courseBunks[bunk.course.id] = { course: bunk.course, count: 0, lastBunk: null };
         }
-        courseBunks[bunk.course.id].count++;
-        if (!courseBunks[bunk.course.id].lastBunk || new Date(bunk.date) > new Date(courseBunks[bunk.course.id].lastBunk)) {
-          courseBunks[bunk.course.id].lastBunk = bunk.date;
+
+        const summary = courseBunks[bunk.course.id];
+        summary.count++;
+
+        if (!summary.lastBunk || new Date(bunk.date) > new Date(summary.lastBunk)) {
+          summary.lastBunk = bunk.date;
         }
       });
       
-      let html = Object.values(courseBunks).map(({ course, count, lastBunk }) => {
+      let html = Object.values(courseBunks).map(({ course, count, lastBunk }: CourseBunkSummary) => {
         const lastBunkDate = lastBunk ? new Date(lastBunk).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Never';
         
         return `

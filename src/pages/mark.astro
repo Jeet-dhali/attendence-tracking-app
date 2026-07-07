@@ -71,7 +71,7 @@ import "../styles/global.css";
         <div class="flex items-center gap-2">
           <button
             id="mark-all-present-btn"
-            class="h-9 px-4 bg-success hover:bg-success-hover text-white text-sm font-medium rounded-lg transition-all duration-200 active:scale-95"
+            class="h-9 px-3 sm:px-4 bg-success hover:bg-success-hover text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 active:scale-95"
           >
             Mark All Present
           </button>
@@ -242,7 +242,7 @@ import "../styles/global.css";
 
     // State
     let selectedDate = new Date();
-    let lastAction = null;
+    let lastAction:any = null;
 
     // Helper to get all records
     function getAllRecords() {
@@ -335,11 +335,11 @@ import "../styles/global.css";
 
     // Date Display
     function renderDateDisplay() {
-      const options = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
+      const options : Intl.DateTimeFormatOptions  = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
       selectedDateDisplay!.textContent = selectedDate.toLocaleDateString("en-IN", options);
       
       // Update date picker value
-      datePicker!.value = formatDate(selectedDate);
+      (datePicker! as HTMLInputElement).value = formatDate(selectedDate);
       
       const dayName = getDayName(selectedDate);
       const isToday = formatDate(selectedDate) === getToday();
@@ -361,7 +361,7 @@ import "../styles/global.css";
       
       // Combine regular schedule with extra classes
       const allSlots = [
-        ...schedule.map(slot => ({ ...slot, isExtra: false })),
+        ...schedule.map((slot:any) => ({ ...slot, isExtra: false })),
         ...extraClassesForDate.map((extra: any) => ({
           ...extra,
           period: 999, // Extra classes don't have period numbers
@@ -397,13 +397,13 @@ import "../styles/global.css";
     }
 
     // Create Schedule Card
-    function createScheduleCard(slot, course, currentStatus, index, dateStr) {
+    function createScheduleCard(slot:any, course:any, currentStatus:any, index:any, dateStr:any) {
       const card = document.createElement("div");
       card.className = "card p-4 sm:p-5 animate-slide-up";
       card.style.animationDelay = `${index * 0.05}s`;
       card.style.animationFillMode = "both";
       
-      const statusInfo = currentStatus ? statusConfig[currentStatus] : null;
+      const statusInfo = currentStatus ? statusConfig[currentStatus as keyof typeof statusConfig] : null;
       const slotKey = slot.isExtra ? slot.id : slot.period;
       
       card.innerHTML = `
@@ -541,10 +541,10 @@ import "../styles/global.css";
         const btn = (e.target as HTMLElement).closest(".status-btn");
         if (!btn) return;
         
-        const slotKey = btn.dataset.slotKey || "";
-        const courseId = btn.dataset.slotCourse || "";
-        const isExtra = btn.dataset.slotIsExtra === "true";
-        const status = btn.dataset.status || "";
+        const slotKey = (btn as HTMLElement).dataset.slotKey || "";
+        const courseId = (btn as HTMLElement).dataset.slotCourse || "";
+        const isExtra = (btn as HTMLElement).dataset.slotIsExtra === "true";
+        const status = (btn as HTMLElement).dataset.status || "";
         const dateStr = formatDate(selectedDate);
         
         // Save for undo
@@ -577,8 +577,8 @@ import "../styles/global.css";
         const btn = (e.target as HTMLElement).closest(".delete-extra-btn");
         if (!btn) return;
         
-        const extraClassId = btn.dataset.deleteExtra || "";
-        const courseId = btn.dataset.deleteCourse || "";
+        const extraClassId = (btn as HTMLElement).dataset.deleteExtra || "";
+        const courseId = (btn as HTMLElement).dataset.deleteCourse || "";
         const dateStr = formatDate(selectedDate);
         
         if (confirm("Remove this extra class? This will also delete its attendance record.")) {
@@ -612,7 +612,7 @@ import "../styles/global.css";
         }
         
         // Save for undo
-        const previousStates = schedule.map(slot => ({
+        const previousStates = schedule.map((slot:any) => ({
           period: slot.period,
           courseId: slot.courseId,
           previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
@@ -624,7 +624,7 @@ import "../styles/global.css";
           previousStates,
         };
         
-        schedule.forEach(slot => {
+        schedule.forEach((slot:any) => {
           markAttendance(dateStr, slot.period, slot.courseId, STATUS_TYPES.PRESENT);
         });
         
@@ -679,7 +679,7 @@ import "../styles/global.css";
           }
           
           // Restore each slot to its previous state
-          previousStates.forEach(({ period, courseId, previousStatus }) => {
+          previousStates.forEach(({ period, courseId, previousStatus }:any) => {
             const key = `${period}_${courseId}`;
             if (previousStatus) {
               // Restore the previous status
@@ -711,7 +711,7 @@ import "../styles/global.css";
       // Quick Actions
       document.querySelectorAll(".quick-action-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          const action = btn.dataset.action;
+          const action = (btn as HTMLElement).dataset.action;
           const dayName = getDayName(selectedDate);
           const dateStr = formatDate(selectedDate);
           const schedule = getDaySchedule(dayName);
@@ -723,7 +723,7 @@ import "../styles/global.css";
           
           if (action === "mark-day-holiday") {
             // Save for undo - get current states before marking
-            const previousStates = schedule.map(slot => ({
+            const previousStates = schedule.map((slot:any) => ({
               period: slot.period,
               courseId: slot.courseId,
               previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
@@ -739,7 +739,7 @@ import "../styles/global.css";
             window.showToast("Marked day as holiday", "success");
           } else if (action === "mark-day-cancelled") {
             // Save for undo - get current states before marking
-            const previousStates = schedule.map(slot => ({
+            const previousStates = schedule.map((slot:any) => ({
               period: slot.period,
               courseId: slot.courseId,
               previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
@@ -755,7 +755,7 @@ import "../styles/global.css";
             window.showToast("Marked day as cancelled", "success");
           } else if (action === "clear-day") {
             // Save for undo
-            const previousStates = schedule.map(slot => ({
+            const previousStates = schedule.map((slot:any) => ({
               period: slot.period,
               courseId: slot.courseId,
               previousStatus: getSlotStatus(dateStr, slot.period, slot.courseId),
@@ -769,7 +769,7 @@ import "../styles/global.css";
             
             const records = getAllRecords();
             if (records[dateStr]) {
-              schedule.forEach(slot => {
+              schedule.forEach((slot:any) => {
                 const key = `${slot.period}_${slot.courseId}`;
                 delete records[dateStr][key];
               });
@@ -801,9 +801,9 @@ import "../styles/global.css";
         const endHours = hours + 1;
         const endStr = `${String(endHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
         
-        extraClassStartInput!.value = startStr;
-        extraClassEndInput!.value = endStr;
-        extraClassNotesInput!.value = "";
+        (extraClassStartInput! as HTMLInputElement).value = startStr;
+        (extraClassEndInput! as HTMLInputElement).value = endStr;
+        (extraClassNotesInput! as HTMLInputElement).value = "";
         
         extraClassModal!.classList.remove("hidden");
       });
@@ -813,10 +813,10 @@ import "../styles/global.css";
       });
 
       saveExtraClassBtn!.addEventListener("click", () => {
-        const courseId = extraClassCourseSelect!.value;
-        const startTime = extraClassStartInput!.value;
-        const endTime = extraClassEndInput!.value;
-        const notes = extraClassNotesInput!.value.trim();
+        const courseId = (extraClassCourseSelect! as HTMLInputElement).value;
+        const startTime = (extraClassStartInput! as HTMLInputElement).value;
+        const endTime = (extraClassEndInput! as HTMLInputElement).value;
+        const notes = (extraClassNotesInput! as HTMLInputElement).value.trim();
         
         if (!courseId || !startTime || !endTime) {
           window.showToast("Please fill in all required fields", "warning");

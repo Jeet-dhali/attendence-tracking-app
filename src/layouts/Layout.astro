@@ -40,6 +40,16 @@ const { title = "MyAttendTracker", activeNav = "dashboard" } = Astro.props;
       rel="stylesheet"
     />
     <title>{title} — MyAttendTracker</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NEW43M9VQ1"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-NEW43M9VQ1');
+    </script>
   </head>
   <body class="min-h-screen bg-bg-primary text-text-primary font-sans">
     <!-- Sidebar (Desktop) -->

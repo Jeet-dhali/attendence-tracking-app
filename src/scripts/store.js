@@ -418,6 +418,12 @@ function getSettings() {
     onboardingComplete: false,
     theme: 'dark',
     periodsPerDay: 8,
+    userName: '',
+    userRoll: '',
+    userBranch: '',
+    userYear: '',
+    userSemester: '',
+    userSection: '',
   };
 }
 

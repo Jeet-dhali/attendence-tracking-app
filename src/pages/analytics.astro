@@ -176,7 +176,7 @@ import "../styles/global.css";
     }
 
     // Helper functions
-    function getStatusColor(pct) {
+    function getStatusColor(pct : any) {
       if (pct >= 75) return "bg-success";
       if (pct >= 50) return "bg-success/80";
       if (pct >= 25) return "bg-warning";
@@ -208,7 +208,7 @@ import "../styles/global.css";
       });
       
       // Course rows
-      courses.forEach(course => {
+      courses.forEach((course : any) => {
         html += `<div class="text-xs font-medium text-text-secondary truncate">${course.code}</div>`;
         
         dates.slice(-30).forEach(date => {
@@ -283,9 +283,9 @@ import "../styles/global.css";
       const stats = { present: 0, absent: 0, late: 0, on_duty: 0, holiday: 0, cancelled: 0 };
       
       Object.values(records).forEach(dayRecords => {
-        Object.values(dayRecords).forEach((entry: any) => {
-          if (stats[entry.status] !== undefined) {
-            stats[entry.status]++;
+        Object.values(dayRecords as object).forEach((entry: any) => {
+          if (stats[entry.status as keyof typeof stats] !== undefined) {
+            stats[entry.status as keyof typeof stats]++;
           }
         });
       });
@@ -412,7 +412,7 @@ import "../styles/global.css";
         return;
       }
 
-      let html = courses.map(course => {
+      let html = courses.map((course : any) => {
         const current = getCourseStats(course.id);
         const predicted = getPredictedPercentage(course.id, 30);
         const diff = predicted - current.percentage;
@@ -454,7 +454,7 @@ import "../styles/global.css";
       
       Object.entries(records).forEach(([dateStr, dayRecords]) => {
         const dayIndex = new Date(dateStr).getDay();
-        Object.values(dayRecords).forEach((entry: any) => {
+        Object.values(dayRecords as object).forEach((entry: any) => {
           if (["present", "late", "on_duty"].includes(entry.status)) {
             dayStats[dayIndex].attended++;
             dayStats[dayIndex].total++;
@@ -495,7 +495,7 @@ import "../styles/global.css";
     function setupEventListeners() {
       document.querySelectorAll(".time-period-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          const period = btn.dataset.period || "week";
+          const period = (btn as HTMLElement).dataset.period || "week";
           currentTimePeriod = period;
           
           document.querySelectorAll(".time-period-btn").forEach(b => {

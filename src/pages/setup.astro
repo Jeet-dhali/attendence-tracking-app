@@ -1,18 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import "../styles/global.css";
+import DataManagement from "../components/DataManagement.astro";
 ---
 
 <Layout title="Setup" activeNav="setup">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 animate-fade-in">
-    <!-- Progress Bar -->
-    <div class="mb-8">
+    <!-- Progress Bar (hidden in edit mode) -->
+    <div class="mb-8" id="progress-section">
       <div class="flex items-center justify-between mb-3">
         <h2
           class="text-lg sm:text-xl font-semibold tracking-tight"
-          id="step-title"
+          id="page-title"
         >
-          Step 1 — Your Details
+          Settings
         </h2>
         <span class="text-xs font-mono text-text-muted" id="step-count"
           >1 / 4</span
@@ -343,12 +344,15 @@ import "../styles/global.css";
       </div>
 
       <!-- Summary -->
-      <div class="card p-4 sm:p-6">
+      <div class="card p-4 sm:p-6 mb-6">
         <h3 class="text-sm font-semibold text-text-secondary mb-3">
           Setup Summary
         </h3>
         <div id="setup-summary" class="space-y-3"></div>
       </div>
+
+      <!-- Data Management -->
+      <DataManagement />
     </div>
 
     <!-- Navigation Buttons -->
@@ -407,12 +411,12 @@ import "../styles/global.css";
     // ─── Step Navigation ────────────────────────
     const steps = document.querySelectorAll(".step-panel");
     const titles = [
-      "Step 1 — Your Details",
-      "Step 2 — Add Your Courses",
-      "Step 3 — Build Timetable",
-      "Step 4 — Semester Details",
+      "Your Details",
+      "Add Your Courses",
+      "Build Timetable",
+      "Semester Details",
     ];
-    const stepTitle = document.getElementById("step-title");
+    const pageTitle = document.getElementById("page-title");
     const stepCount = document.getElementById("step-count");
     const progressFill = document.getElementById("progress-fill");
     const prevBtn = document.getElementById("prev-btn");
@@ -423,11 +427,11 @@ import "../styles/global.css";
       steps.forEach((panel: any, i: any) => {
         panel.classList.toggle("hidden", i !== step - 1);
       });
-      stepTitle!.textContent = titles[step - 1];
+      pageTitle!.textContent = titles[step - 1];
       stepCount!.textContent = `${step} / 4`;
       progressFill!.style.width = `${(step / 4) * 100}%`;
       prevBtn!.classList.toggle("hidden", step === 1);
-      nextBtn!.textContent = step === 4 ? "✓ Finish Setup" : "Next →";
+      nextBtn!.textContent = step === 4 ? "✓ Save Changes" : "Next →";
 
       if (step === 3) renderTimetable();
       if (step === 4) renderSummary();
@@ -469,7 +473,8 @@ import "../styles/global.css";
           semesterEnd: semEnd,
           onboardingComplete: true,
         });
-        window.showToast("Setup complete! 🎉", "success");
+        const wasComplete = getSettings().onboardingComplete;
+        window.showToast(wasComplete ? "Settings saved! ✓" : "Setup complete! 🎉", "success");
         setTimeout(() => (window.location.href = "/dashboard"), 800);
         return;
       }
@@ -750,9 +755,13 @@ import "../styles/global.css";
         if (e.target === e.currentTarget) closePalette();
       });
 
-    // If onboarding is already complete, start at step 1 (edit mode)
+    // If onboarding is already complete, show edit mode indicator
     if (settings.onboardingComplete) {
-      nextBtn!.textContent = "Next →";
+      // User is in edit mode, not first-time setup
+      // They can navigate through all steps to edit their settings
+      // Hide progress section in edit mode
+      const progressSection = document.getElementById("progress-section");
+      if (progressSection) progressSection.classList.add("hidden");
     }
   </script>
 </Layout>

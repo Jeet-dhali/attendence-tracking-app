@@ -446,8 +446,10 @@ function exportData() {
     timetable: getTimetable(),
     records: getRecords(),
     settings: getSettings(),
+    extraClasses: getExtraClasses(),
+    theme: localStorage.getItem('att_theme'),
     exportedAt: new Date().toISOString(),
-    version: 1,
+    version: 2,
   }, null, 2);
 }
 
@@ -458,6 +460,8 @@ function importData(jsonStr) {
     if (data.timetable) _set(KEYS.TIMETABLE, data.timetable);
     if (data.records) _set(KEYS.RECORDS, data.records);
     if (data.settings) _set(KEYS.SETTINGS, data.settings);
+    if (data.extraClasses) saveExtraClasses(data.extraClasses);
+    if (data.theme) localStorage.setItem('att_theme', data.theme);
     return true;
   } catch {
     return false;
@@ -469,6 +473,8 @@ function resetAllData() {
   localStorage.removeItem(KEYS.TIMETABLE);
   localStorage.removeItem(KEYS.RECORDS);
   localStorage.removeItem(KEYS.SETTINGS);
+  localStorage.removeItem('att_extra_classes');
+  localStorage.removeItem('att_theme');
 }
 
 // ─── Date Helpers ──────────────────────────────────────────

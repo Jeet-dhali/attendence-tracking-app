@@ -1,0 +1,148 @@
+---
+/**
+ * DataManagement Component
+ * Provides export/import functionality for backup and restore of attendance data
+ */
+---
+
+<div class="card p-4 sm:p-6">
+  <h3 class="text-sm font-semibold text-text-secondary mb-1">Data Management</h3>
+  <p class="text-xs text-text-muted mb-4">
+    Export your data to create a backup, or import a previously saved backup to restore your data.
+  </p>
+
+  <div class="space-y-3">
+    <!-- Export Button -->
+    <div>
+      <button
+        id="export-btn"
+        class="w-full h-10 px-4 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+      >
+        <svg
+          class="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Export Data
+      </button>
+      <p class="text-[10px] text-text-muted mt-1.5">
+        Downloads a JSON file with all your attendance data, courses, timetable, and settings.
+      </p>
+    </div>
+
+    <!-- Import Section -->
+    <div class="pt-3 border-t border-border">
+      <label class="block text-xs font-medium text-text-muted mb-1.5">Import Data</label>
+      <div class="flex gap-2 items-center">
+        <div class="flex-1">
+          <label
+            for="import-file"
+            class="h-10 flex items-center justify-start px-2 gap-3 bg-bg-tertiary border border-border rounded-lg cursor-pointer text-sm text-text-primary hover:bg-bg-elevated transition-all"
+          >
+            <span class="px-3 py-1 rounded-md bg-accent text-white text-xs font-medium">
+              Choose File
+            </span>
+            <span id="file-name">No file chosen</span>
+          </label>
+
+          <input
+            type="file"
+            id="import-file"
+            accept=".json"
+            class="hidden"
+          />
+        </div>
+        <button
+          id="import-btn"
+          class="h-10 px-4 bg-bg-tertiary hover:bg-bg-elevated text-text-secondary text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 cursor-pointer border border-border whitespace-nowrap"
+        >
+          Import
+        </button>
+      </div>
+      <p class="text-[10px] text-text-muted mt-1.5">
+        Select a previously exported JSON file to restore your data. This will replace all existing data.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { exportData, importData } from "../scripts/store.js";
+
+  declare global {
+    interface Window {
+      showToast: (message: string, type?: string) => void;
+    }
+  }
+
+  // Export functionality
+  const exportBtn = document.getElementById("export-btn");
+  exportBtn!.addEventListener("click", () => {
+    try {
+      const dataStr = exportData();
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      const timestamp = new Date().toISOString().split("T")[0];
+      link.download = `attendance-backup-${timestamp}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      window.showToast("Data exported successfully!", "success");
+    } catch (error) {
+      console.error("Export failed:", error);
+      window.showToast("Export failed. Please try again.", "error");
+    }
+  });
+
+  // Import functionality
+  const importBtn = document.getElementById("import-btn");
+  const importFile = document.getElementById("import-file") as HTMLInputElement;
+  const fileName = document.getElementById("file-name");
+
+  // Update file name when file is selected
+  importFile!.addEventListener("change", () => {
+    fileName!.textContent = importFile!.files!.length
+      ? importFile!.files![0]!.name
+      : "No file chosen";
+  });
+
+  importBtn!.addEventListener("click", () => {
+    const file = importFile!.files?.[0];
+    if (!file) {
+      window.showToast("Please select a file to import.", "warning");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const success = importData(content);
+        if (success) {
+          window.showToast("Data imported successfully! Refreshing...", "success");
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          window.showToast("Import failed. Invalid file format.", "error");
+        }
+      } catch (error) {
+        console.error("Import failed:", error);
+        window.showToast("Import failed. Please check the file format.", "error");
+      }
+    };
+    reader.onerror = () => {
+      window.showToast("Failed to read the file. Please try again.", "error");
+    };
+    reader.readAsText(file);
+  });
+</script>

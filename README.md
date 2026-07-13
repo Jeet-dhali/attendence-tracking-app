@@ -1,44 +1,58 @@
-````md
 <div align="center">
 
-# 📚 MyAttendTracker
+<h1>MyAttendTracker</h1>
 
-### A modern, privacy-first attendance tracker built for students.
+<p>
+  <strong>A modern, privacy-first attendance tracker built for students.</strong>
+</p>
 
-[![Website](https://img.shields.io/badge/🌐_Live-myattendtracker.com-22c55e?style=for-the-badge)](https://myattendtracker.com)
-[![Astro Badge](https://img.shields.io/badge/Astro-7.0.6-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
+<p>
+  <a href="https://myattendtracker.com">
+    <img src="https://img.shields.io/badge/🌐_Live-myattendtracker.com-22c55e?style=for-the-badge" alt="Live Website">
+  </a>
+  <a href="https://astro.build">
+    <img src="https://img.shields.io/badge/Astro-7.0.6-FF5D01?style=for-the-badge&logo=astro&logoColor=white" alt="Astro">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License">
+  </a>
+</p>
 
-**Live Website:** https://myattendtracker.com
+<p>
+  <a href="https://myattendtracker.com"><strong>Visit MyAttendTracker</strong></a>
+</p>
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎯 **Dashboard** — Get a quick overview of your attendance.
-- ✅ **Mark Attendance** — Easily record attendance with date navigation.
-- 📊 **Advanced Analytics** — Heatmaps, trends, predictions, and detailed insights.
-- 🎓 **Bunk Calculator** — Know exactly how many classes you can safely miss.
-- 📅 **Calendar View** — Color-coded attendance history.
-- 💾 **Privacy First** — Your data stays in your browser. Nothing is uploaded.
-- 🌙 **Dark Mode** — Clean and modern UI.
-- 📱 **Responsive** — Works seamlessly across desktop and mobile devices.
-
----
-
-## 🚀 Try It
-
-Visit **https://myattendtracker.com** and start tracking your attendance instantly.
-
-- 🚫 No sign-up required
-- 🔒 No personal data collection
-- ⚡ Works directly in your browser
+- **Dashboard** — Get a quick overview of your attendance.
+- **Mark Attendance** — Easily record attendance with date navigation.
+- **Advanced Analytics** — Heatmaps, trends, predictions, attendance percentage, and detailed insights.
+- **Bunk Calculator** — Know exactly how many classes you can safely miss.
+- **Calendar View** — Color-coded attendance history.
+- **Privacy First** — Your data stays in your browser. Nothing is uploaded to any server.
+- **Dark Mode** — Beautiful modern interface.
+- **Responsive Design** — Optimized for desktop, tablet, and mobile.
 
 ---
 
-## 📱 Pages
+## Live Website
+
+Try MyAttendTracker now:
+
+### **https://myattendtracker.com**
+
+No sign up required  
+No account needed  
+No personal data collected  
+Start tracking your attendance instantly
+
+---
+
+## Pages
 
 - **Dashboard** (`/`)
 - **Mark Attendance** (`/mark`)
@@ -48,20 +62,23 @@ Visit **https://myattendtracker.com** and start tracking your attendance instant
 
 ---
 
-## 💾 Data Storage
+## Privacy
 
-MyAttendTracker is designed with privacy in mind.
+MyAttendTracker is built with privacy as the priority.
 
-- ✅ All attendance data is stored locally in your browser.
-- ✅ No user accounts required.
-- ✅ No attendance data is sent to any server.
+- All attendance data is stored locally in your browser.
+- No user accounts.
+- No cloud database.
+- No tracking of your attendance records.
+
+Your data always stays with you.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
-attendance-tracker/
+MyAttendTracker/
 ├── public/
 ├── src/
 │   ├── assets/
@@ -77,33 +94,68 @@ attendance-tracker/
 
 ---
 
-## 🤝 Contributing
+## Built With
 
-Contributions are always welcome!
-
-If you'd like to improve MyAttendTracker, you can:
-
-- 🐛 Report bugs by opening an Issue.
-- 💡 Suggest new features or improvements.
-- 🎨 Improve the UI/UX.
-- ⚡ Optimize performance.
-- 🌍 Help with accessibility or translations.
-- 🔧 Submit a Pull Request with your changes.
-
-### How to Contribute
-
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Commit your changes.
-5. Push your branch.
-6. Open a Pull Request describing what you changed.
-
-Every contribution, no matter how small, is appreciated ❤️
+- Astro
+- TypeScript
+- JavaScript
+- CSS
+- Local Storage API
 
 ---
 
-## 📄 License
+## Contributing
+
+Contributions are always welcome!
+
+Whether you've found a bug, have an idea for a new feature, or want to improve the UI, your help is appreciated.
+
+### Ways you can contribute
+
+- Report bugs
+- Suggest new features
+- Improve the UI/UX
+- Optimize performance
+- Improve accessibility
+- Improve documentation
+
+### Getting Started
+
+1. Fork this repository.
+2. Create a new branch.
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+3. Make your changes.
+4. Commit your changes.
+
+```bash
+git commit -m "Add: your feature"
+```
+
+5. Push your branch.
+
+```bash
+git push origin feature/your-feature-name
+```
+
+6. Open a Pull Request describing your changes.
+
+Every contribution—big or small—is greatly appreciated ❤️
+
+---
+
+## Support
+
+If you find MyAttendTracker useful, please consider giving this repository a ⭐.
+
+It helps more students discover the project and motivates further development.
+
+---
+
+## License
 
 This project is licensed under the MIT License.
 
@@ -111,9 +163,10 @@ This project is licensed under the MIT License.
 
 <div align="center">
 
-⭐ **If you find MyAttendTracker useful, consider giving the repository a star!**
+Made with ❤️ using <a href="https://astro.build">Astro</a>
 
-Built with ❤️ using <a href="https://astro.build">Astro</a>
+<br><br>
+
+<a href="https://myattendtracker.com"><strong>myattendtracker.com</strong></a>
 
 </div>
-````
